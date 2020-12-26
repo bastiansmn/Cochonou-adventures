@@ -13,4 +13,9 @@ public class Bombe extends Bonus {
    public int getNombreRestant() {
       return this.nbrRestant;
    }
+
+   @Override
+   public void utiliser() {
+      this.nbrRestant--;
+   }
 }

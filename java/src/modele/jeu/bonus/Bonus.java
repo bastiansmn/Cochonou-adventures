@@ -14,5 +14,10 @@ public abstract class Bonus {
 
    public abstract int getNombreRestant();
 
+   // TODO : Implementer les bonus pour leur donner des actions.
+   public abstract void utiliser();
 
+   public String getInit() {
+      return init;
+   }
 }

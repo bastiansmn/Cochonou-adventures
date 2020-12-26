@@ -43,7 +43,7 @@ public class Grille {
                actionOuvertureGrille(option[1]);
                break;
             case 1:
-               // TODO : Appeler le bonus correspondant à option[1]
+               actionBonus(option[1]);
                break;
             case 2:
                afficherAide();
@@ -56,31 +56,42 @@ public class Grille {
    }
 
    public void actionOuvertureGrille(String s) {
-      int i = s.toUpperCase().charAt(0) - 65;
-      int j = Integer.parseInt(s.substring(1)) - 1;
+      int j = s.toUpperCase().charAt(0) - 65;
+      int i = Integer.parseInt(s.substring(1)) - 1;
 
       if (i >= 0 && i < cases.length && j >= 0 && j < cases[i].length) {
-         ouvrirCase(i, j);
+         if (cases[i][j] != null && cases[i][j].getContent() instanceof BlocCouleur) {
+            ouvrirCase(i, j, ((BlocCouleur) cases[i][j].getContent()).getColor());
+         } else {
+            Erreur.afficher("Impossible de casser ce bloc");
+         }
       } else {
          Erreur.afficher("La case n'est pas valide");
       }
+   }
+
+   public void actionBonus(String s) {
+      for (Bonus bonusInitiales : Joueur.bonus)
+         if (s.equals(bonusInitiales.getInit())) {
+            bonusInitiales.utiliser();
+            return;
+         }
    }
 
    public void nettoyerGrille() {
       // Ajouter le code ici
    }
 
-   public void ouvrirCase(int i, int j) {
-      if (cases[i][j].getContent() instanceof BlocCouleur) {
-         if (comboPossible(i, j, ((BlocCouleur) cases[i][j].getContent()).getColor())) {
+   public void ouvrirCase(int i, int j, Color c) {
+      System.out.println(i + " " + j);
+      if (cases[i][j] != null && cases[i][j].getContent() instanceof BlocCouleur) {
+         if (comboPossible(i, j, c)) {
             cases[i][j] = new Case(new BlocADetruire());
             // TODO : nettoyer grille (cf fonction nettoyerGrille() );
-            ouvrirCase(i-1, j);
-            ouvrirCase(i, j-1);
-            ouvrirCase(i, j+1);
-            ouvrirCase(i+1, j);
-         } else {
-            Erreur.afficher("Vous ne pouvez pas détruire ce bloc !");
+            ouvrirCase(i-1, j, c);
+            ouvrirCase(i, j-1, c);
+            ouvrirCase(i, j+1, c);
+            ouvrirCase(i+1, j, c);
          }
       }
    }

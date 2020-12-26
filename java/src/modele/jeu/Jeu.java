@@ -32,10 +32,10 @@ public class Jeu {
       Joueur.bonus[4] = new ColorChange();
 
       try {
-         plateau.ajouterNiveau(new Niveau(1, new Grille().getCSV("csv", ";")));
-         plateau.ajouterNiveau(new Niveau(2, new Grille().getCSV("csv", ";")));
-         plateau.ajouterNiveau(new Niveau(3, new Grille().getCSV("csv", ";")));
-         plateau.ajouterNiveau(new Niveau(4, new Grille().getCSV("csv", ";")));
+         plateau.ajouterNiveau(new Niveau(1, new Grille().getCSV("niveaux/nv1.csv", ";")));
+         plateau.ajouterNiveau(new Niveau(2, new Grille().getCSV("niveaux/nv1.csv", ";")));
+         plateau.ajouterNiveau(new Niveau(3, new Grille().getCSV("niveaux/nv1.csv", ";")));
+         plateau.ajouterNiveau(new Niveau(4, new Grille().getCSV("niveaux/nv1.csv", ";")));
       } catch (CSVNotValidException e) {
          e.printStackTrace();
       }

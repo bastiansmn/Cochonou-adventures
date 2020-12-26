@@ -14,4 +14,9 @@ public class Firework extends Bonus {
    public int getNombreRestant() {
       return this.nbrRestant;
    }
+
+   @Override
+   public void utiliser() {
+      this.nbrRestant--;
+   }
 }
