@@ -13,13 +13,15 @@ public class Jeu {
 
    public static Joueur joueur = null;
    public static Plateau plateau = null;
+   public static String type = null;
 
-   public Jeu(String nom) {
-      joueur = new Joueur(nom);
+   public Jeu(String[] args) {
+      type = args[1];
+      joueur = new Joueur(args[0]);
       plateau = new Plateau();
    }
 
-   public int run(String[] args) throws InvocationTargetException, InterruptedException {
+   public int run() throws InvocationTargetException, InterruptedException {
       // Test pour ajouter des niveaux (à enlever plus tard) et ajouter les bonus du joueur:
       Joueur.bonus[0] = new Firework();
       Joueur.bonus[1] = new ColorChange();
@@ -37,9 +39,9 @@ public class Jeu {
       }
 
 
-      if (args.length == 2 && (args[1].equals("-g") || args[0].equals("--graphical"))) {
+      if ((type.equals("-g") || joueur.getNom().equals("--graphical"))) {
          return new vue.graphique.Launcher().runGraphical();
-      } else if (args.length == 2 && (args[1].equals("-t") || args[0].equals("--textual"))) {
+      } else if ((type.equals("-t") || joueur.getNom().equals("--textual"))) {
          return new vue.terminal.Launcher().runTextual();
       }
       vue.terminal.Launcher.displayHelp();
