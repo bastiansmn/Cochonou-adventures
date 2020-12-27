@@ -35,6 +35,7 @@ public class Grille {
          if (cases[i][j] != null && cases[i][j].getContent() instanceof BlocCouleur) {
             ouvrirCase(i, j, ((BlocCouleur) cases[i][j].getContent()).getColor());
             nettoyerGrille();
+            // TODO : sérialiser le plateau à chaque mouvement ou au moins à chaque fin de jeu (if (gagne()))
          } else {
             Erreur.afficher("Impossible de casser ce bloc");
          }
@@ -53,6 +54,7 @@ public class Grille {
 
    public void nettoyerGrille() {
       // Ajouter le code ici
+      // TODO : Faire descendre les blocs
    }
 
    public void ouvrirCase(int i, int j, Color c) {
