@@ -1,10 +1,7 @@
 package modele.jeu.grille;
 
 import modele.jeu.animaux.*;
-import modele.jeu.bonus.Bombe;
 import modele.jeu.bonus.Bonus;
-import modele.jeu.bonus.ColorChange;
-import modele.jeu.bonus.Firework;
 import modele.jeu.grille.blocs.*;
 import modele.outils.Joueur;
 import modele.outils.erreurs.CSVNotValidException;
@@ -14,7 +11,6 @@ import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Arrays;
-import java.util.Scanner;
 
 
 public class Grille {
@@ -53,8 +49,20 @@ public class Grille {
    }
 
    public void nettoyerGrille() {
-      // Ajouter le code ici
-      // TODO : Faire descendre les blocs
+      for (int i = 0; i < cases[cases.length - 1].length; i++) {
+         for (int j = cases.length - 2; j >= 0; j--) {
+            int k = j;
+            while (k < cases.length - 1 && cases[k][i] != null && cases[k][i].getContent() instanceof Deplacable && cases[k + 1][i] != null && cases[k + 1][i].getContent() == null) {
+               cases[k+1][i] = cases[k][i];
+               cases[k][i] = new Case(null);
+               if (cases[k+1][i].getContent() instanceof Animal && k == cases.length - 2) {
+                  cases[k+1][i] = new Case(null);
+                  animauxSauvee++;
+               }
+               k++;
+            }
+         }
+      }
    }
 
    public void ouvrirCase(int i, int j, Color c, boolean premiereOuverture) {
@@ -67,7 +75,8 @@ public class Grille {
                ouvrirCase(i + 1, j, c, false);
                ouvrirCase(i, j + 1, c, false);
             }
-      } catch (ArrayIndexOutOfBoundsException ignored) {}
+      } catch (ArrayIndexOutOfBoundsException ignored) {
+      }
    }
 
    public boolean comboPossible(int i, int j, Color c) {
@@ -75,19 +84,23 @@ public class Grille {
          try {
             if (cases[i][j + 1] != null && cases[i][j + 1].getContent() instanceof BlocCouleur && ((BlocCouleur) cases[i][j + 1].getContent()).getColor() == c)
                return true;
-         } catch (ArrayIndexOutOfBoundsException ignored) {}
+         } catch (ArrayIndexOutOfBoundsException ignored) {
+         }
          try {
             if (cases[i][j - 1] != null && cases[i][j - 1].getContent() instanceof BlocCouleur && ((BlocCouleur) cases[i][j - 1].getContent()).getColor() == c)
                return true;
-         } catch (ArrayIndexOutOfBoundsException ignored) {}
+         } catch (ArrayIndexOutOfBoundsException ignored) {
+         }
          try {
             if (cases[i - 1][j] != null && cases[i - 1][j].getContent() instanceof BlocCouleur && ((BlocCouleur) cases[i - 1][j].getContent()).getColor() == c)
                return true;
-         } catch (ArrayIndexOutOfBoundsException ignored) {}
+         } catch (ArrayIndexOutOfBoundsException ignored) {
+         }
          try {
             if (cases[i + 1][j] != null && cases[i + 1][j].getContent() instanceof BlocCouleur && ((BlocCouleur) cases[i + 1][j].getContent()).getColor() == c)
                return true;
-         } catch (ArrayIndexOutOfBoundsException ignored) {}
+         } catch (ArrayIndexOutOfBoundsException ignored) {
+         }
       }
       return false;
    }

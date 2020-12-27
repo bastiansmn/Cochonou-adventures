@@ -1,9 +1,10 @@
 package modele.jeu.animaux;
 
 import modele.jeu.grille.CaseType;
+import modele.jeu.grille.blocs.Deplacable;
 import modele.outils.coordonnees.Coordonnees;
 
-public class Animal extends CaseType implements Animaux {
+public class Animal extends CaseType implements Animaux, Deplacable {
 
    private String nom;
    private final String initiale;

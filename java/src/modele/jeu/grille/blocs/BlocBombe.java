@@ -1,4 +1,4 @@
 package modele.jeu.grille.blocs;
 
-public class BlocBombe extends Bloc {
+public class BlocBombe extends Bloc implements Deplacable {
 }

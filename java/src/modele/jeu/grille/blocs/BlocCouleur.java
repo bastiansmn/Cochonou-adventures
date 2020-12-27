@@ -2,7 +2,7 @@ package modele.jeu.grille.blocs;
 
 import java.awt.*;
 
-public class BlocCouleur extends Bloc {
+public class BlocCouleur extends Bloc implements Deplacable {
 
    public final String ANSI_RESET = "\u001B[0m";
    private final String termColor;
