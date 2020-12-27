@@ -27,10 +27,6 @@ public class Grille {
    private int animauxSauvee = 0;
    private int animauxRestants;
 
-   public void run() {
-
-   }
-
    public void actionOuvertureGrille(String s) {
       int j = s.toUpperCase().charAt(0) - 65;
       int i = Integer.parseInt(s.substring(1)) - 1;
@@ -38,6 +34,7 @@ public class Grille {
       if (i >= 0 && i < cases.length && j >= 0 && j < cases[i].length) {
          if (cases[i][j] != null && cases[i][j].getContent() instanceof BlocCouleur) {
             ouvrirCase(i, j, ((BlocCouleur) cases[i][j].getContent()).getColor());
+            nettoyerGrille();
          } else {
             Erreur.afficher("Impossible de casser ce bloc");
          }
@@ -59,34 +56,36 @@ public class Grille {
    }
 
    public void ouvrirCase(int i, int j, Color c) {
-      System.out.println(i + " " + j);
-      if (cases[i][j] != null && cases[i][j].getContent() instanceof BlocCouleur) {
-         if (comboPossible(i, j, c)) {
-            cases[i][j] = new Case(new BlocADetruire());
-            // TODO : nettoyer grille (cf fonction nettoyerGrille() );
-            ouvrirCase(i-1, j, c);
-            ouvrirCase(i, j-1, c);
-            ouvrirCase(i, j+1, c);
-            ouvrirCase(i+1, j, c);
-         }
-      }
+      try {
+         if (cases[i][j] != null && cases[i][j].getContent() instanceof BlocCouleur)
+            if (comboPossible(i, j, c) || ((BlocCouleur) cases[i][j].getContent()).getColor() == c) {
+               cases[i][j] = new Case(null);
+               ouvrirCase(i - 1, j, c);
+               ouvrirCase(i, j - 1, c);
+               ouvrirCase(i + 1, j, c);
+               ouvrirCase(i, j + 1, c);
+            }
+      } catch (ArrayIndexOutOfBoundsException ignored) {}
    }
 
    public boolean comboPossible(int i, int j, Color c) {
       if (cases[i][j].getContent() instanceof BlocCouleur && ((BlocCouleur) cases[i][j].getContent()).getColor() == c) {
          try {
-            if (cases[i][j + 1].getContent() instanceof BlocCouleur && ((BlocCouleur) cases[i][j + 1].getContent()).getColor() == c)
+            if (cases[i][j + 1] != null && cases[i][j + 1].getContent() instanceof BlocCouleur && ((BlocCouleur) cases[i][j + 1].getContent()).getColor() == c)
                return true;
          } catch (ArrayIndexOutOfBoundsException ignored) {}
          try {
-            if (cases[i][j - 1].getContent() instanceof BlocCouleur && ((BlocCouleur) cases[i][j - 1].getContent()).getColor() == c)
+            if (cases[i][j - 1] != null && cases[i][j - 1].getContent() instanceof BlocCouleur && ((BlocCouleur) cases[i][j - 1].getContent()).getColor() == c)
                return true;
          } catch (ArrayIndexOutOfBoundsException ignored) {}
          try {
-            if (cases[i - 1][j].getContent() instanceof BlocCouleur && ((BlocCouleur) cases[i][j + 1].getContent()).getColor() == c)
+            if (cases[i - 1][j] != null && cases[i - 1][j].getContent() instanceof BlocCouleur && ((BlocCouleur) cases[i - 1][j].getContent()).getColor() == c)
                return true;
          } catch (ArrayIndexOutOfBoundsException ignored) {}
-         return cases[i + 1][j].getContent() instanceof BlocCouleur && ((BlocCouleur) cases[i][j - 1].getContent()).getColor() == c;
+         try {
+            if (cases[i + 1][j] != null && cases[i + 1][j].getContent() instanceof BlocCouleur && ((BlocCouleur) cases[i + 1][j].getContent()).getColor() == c)
+               return true;
+         } catch (ArrayIndexOutOfBoundsException ignored) {}
       }
       return false;
    }
@@ -210,27 +209,5 @@ public class Grille {
       this.largeur = this.cases[0].length;
 
       return this;
-   }
-
-   public void clear() {
-      System.out.print("\033[H\033[2J");
-      System.out.flush();
-   }
-
-
-   public static void main(String[] args) {
-      Joueur.bonus[0] = new Firework();
-      Joueur.bonus[1] = new ColorChange();
-      Joueur.bonus[2] = new Bombe();
-      Joueur.bonus[3] = new Bombe();
-      Joueur.bonus[4] = new ColorChange();
-      Grille g = new Grille();
-      try {
-         g = new Grille().getCSV("niveaux/nv1.csv", ";");
-      } catch (CSVNotValidException e) {
-         e.printStackTrace();
-      }
-
-      g.run();
    }
 }

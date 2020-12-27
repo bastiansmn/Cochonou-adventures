@@ -63,7 +63,6 @@ public class Launcher {
    }
 
    private void jouerGrille(Grille g) {
-      Scanner sc = new Scanner(System.in);
       boolean quitter = false;
       do {
          clear();
@@ -74,18 +73,10 @@ public class Launcher {
          String[] option = getOptionGrille();
 
          switch (Integer.parseInt(option[0])) {
-            case 0:
-               g.actionOuvertureGrille(option[1]);
-               break;
-            case 1:
-               g.actionBonus(option[1]);
-               break;
-            case 2:
-               afficherAideGrille();
-               break;
-            case 3:
-               quitter = true;
-               break;
+            case 0 -> g.actionOuvertureGrille(option[1]);
+            case 1 -> g.actionBonus(option[1]);
+            case 2 -> afficherAideGrille();
+            case 3 -> quitter = true;
          }
       } while (!g.gagne() && !quitter);
    }
