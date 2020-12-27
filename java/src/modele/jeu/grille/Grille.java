@@ -1,5 +1,6 @@
 package modele.jeu.grille;
 
+import modele.jeu.Jeu;
 import modele.jeu.animaux.*;
 import modele.jeu.bonus.Bonus;
 import modele.jeu.grille.blocs.*;
@@ -29,7 +30,7 @@ public class Grille {
 
       if (i >= 0 && i < cases.length && j >= 0 && j < cases[i].length) {
          if (cases[i][j] != null && cases[i][j].getContent() instanceof BlocCouleur) {
-            ouvrirCase(i, j, ((BlocCouleur) cases[i][j].getContent()).getColor(), true);
+            this.score += (int) (1000 * Math.pow(ouvrirCase(i, j, ((BlocCouleur) cases[i][j].getContent()).getColor(), true), 2));
             nettoyerGrille();
             // TODO : sérialiser le plateau à chaque mouvement ou au moins à chaque fin de jeu (if (gagne()))
          } else {
@@ -58,6 +59,7 @@ public class Grille {
                if (cases[k+1][i].getContent() instanceof Animal && k == cases.length - 2) {
                   cases[k+1][i] = new Case(null);
                   animauxSauvee++;
+                  this.score += 5000;
                }
                k++;
             }
@@ -65,18 +67,21 @@ public class Grille {
       }
    }
 
-   public void ouvrirCase(int i, int j, Color c, boolean premiereOuverture) {
+   public int ouvrirCase(int i, int j, Color c, boolean premiereOuverture) {
+      int summ = 0;
       try {
          if (cases[i][j] != null && cases[i][j].getContent() instanceof BlocCouleur)
             if (comboPossible(i, j, c) || ((BlocCouleur) cases[i][j].getContent()).getColor() == c && !premiereOuverture) {
                cases[i][j] = new Case(null);
-               ouvrirCase(i - 1, j, c, false);
-               ouvrirCase(i, j - 1, c, false);
-               ouvrirCase(i + 1, j, c, false);
-               ouvrirCase(i, j + 1, c, false);
+               summ += ouvrirCase(i - 1, j, c, false);
+               summ += ouvrirCase(i, j - 1, c, false);
+               summ += ouvrirCase(i + 1, j, c, false);
+               summ += ouvrirCase(i, j + 1, c, false);
+               summ++;
             }
       } catch (ArrayIndexOutOfBoundsException ignored) {
       }
+      return summ;
    }
 
    public boolean comboPossible(int i, int j, Color c) {
@@ -106,7 +111,11 @@ public class Grille {
    }
 
    public boolean gagne() {
-      return animauxSauvee == animauxRestants;
+      if (animauxSauvee == animauxRestants) {
+         Jeu.joueur.gagner(this.score);
+         return true;
+      }
+      return false;
    }
 
    public void exportToCSV() throws FileNotFoundException {
@@ -178,7 +187,7 @@ public class Grille {
 
    public String scoreboard() {
       return "┌───────────────────┐\n" +
-            "│  Score :  " + "0".repeat(6 - Integer.toString(this.score).length()) + this.score + "  │\n" +
+            "│  Score : " + "0".repeat(7 - Integer.toString(this.score).length()) + this.score + "  │\n" +
             "│  Animaux :  " + this.animauxSauvee + '/' + this.animauxRestants + "   │\n" +
             "│  Bonus :          │\n" +
             "│  " + Arrays.toString(Joueur.bonus).replace("[", "").replace("]", "").replace(",", "").replaceAll("null", "--") + "   │\n" +

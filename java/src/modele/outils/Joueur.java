@@ -4,23 +4,17 @@ import modele.jeu.bonus.Bonus;
 
 public class Joueur {
 
-   private final int ID;
-
-   private static int nbrJoueur = 0;
-
    private final String nom;
    private int vie;
-   private int argent;
+   private int score;
 
    public static final Bonus[] bonus = new Bonus[5];
 
 
    public Joueur(String nom) {
-      this.ID = nbrJoueur;
-      nbrJoueur++;
       this.nom = nom;
       this.vie = 5;
-      this.argent = 3000;
+      this.score = 0;
    }
 
 
@@ -32,16 +26,16 @@ public class Joueur {
       return true;
    }
 
-   public void gagnerArgent(int n) {
-      this.argent += n;
+   public void gagner(int n) {
+      this.score += n;
    }
 
    public boolean plusDeVie() {
       return this.vie == 0;
    }
 
-   public int getArgent() {
-      return argent;
+   public int getScore() {
+      return score;
    }
 
    public int getVie() {

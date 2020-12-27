@@ -21,8 +21,9 @@ public class Launcher {
 
       String reponse;
       do {
+         affichageInfoJoueur();
          Jeu.plateau.afficher();
-         System.out.println("[? pour afficher les règles]\nUtilisez z/s pour changer de niveau, d pour lancer le niveau sélectionné ou entrez le numéro d'un niveau :");
+         System.out.println("[? pour afficher les règles]\n==============\nUtilisez z/s pour changer de niveau, d pour lancer le niveau sélectionné ou entrez le numéro d'un niveau :");
          reponse = new Scanner(System.in).next();
 
          if (reponse.matches("[0-9]+")) {
@@ -79,8 +80,12 @@ public class Launcher {
       } while (!g.gagne() && !quitter);
       clear();
       System.out.println("""
+            Votre score :\t""" + g.getScore() + """
+                        
+            Animaux sauvés :\t """ + g.getAnimauxSauvee() + """      
+            
                   _____                          _\s
-                 / ____|                        | |
+                 / ____|                    //  | |
                 | |  __  __ _  __ _ _ __   ___  | |
                 | | |_ |/ _` |/ _` | '_ \\ / _ \\ | |
                 | |__| | (_| | (_| | | | |  __/ |_|
@@ -137,6 +142,15 @@ public class Launcher {
              \\_____\\___/ \\___|_| |_|\\___/|_| |_|\\___/ \\__,_|           \\__,_|\\__,_| \\_/ \\___|_| |_|\\__|\\__,_|_|  \\___||___/
                                                                                                                           \s
                                                                                                                           \s""".indent(1));
+   }
+
+   private void affichageInfoJoueur() {
+      System.out.println(String.format("""
+           =================
+               Votre score : %d
+               Votre nombre de vie : %d
+      
+            """, Jeu.joueur.getScore(), Jeu.joueur.getVie()));
    }
 
    private void clear() {
