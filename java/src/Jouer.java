@@ -8,6 +8,6 @@ public class Jouer {
       if (args.length != 0) {
          System.out.println(new Jeu(args[0]).run(args));
       } else
-         Jeu.displayHelp();
+         vue.terminal.Launcher.displayHelp();
    }
 }

@@ -29,6 +29,20 @@ public class Plateau {
       }
    }
 
+   public Niveau jouerNiveauParNumero(int num) {
+      if (num < niveaux.size()) {
+         if (indexNiveauActuel > num)
+            while (indexNiveauActuel > num)
+               deplacerGauche();
+         else if (indexNiveauActuel < num)
+            while (indexNiveauActuel < num)
+               deplacerDroite();
+
+        return niveaux.get(num);
+      }
+      return null;
+   }
+
    public void deplacerDroite() {
       if (this.indexNiveauActuel < this.niveaux.size() - 1) {
          this.indexNiveauActuel++;

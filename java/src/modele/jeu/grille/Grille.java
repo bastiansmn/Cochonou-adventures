@@ -28,31 +28,7 @@ public class Grille {
    private int animauxRestants;
 
    public void run() {
-      Scanner sc = new Scanner(System.in);
-      boolean quitter = false;
-      do {
-         clear();
-         scoreboard();
-         afficherGrille();
 
-         // Demander l'action à faire.
-         String[] option = getOption();
-
-         switch (Integer.parseInt(option[0])) {
-            case 0:
-               actionOuvertureGrille(option[1]);
-               break;
-            case 1:
-               actionBonus(option[1]);
-               break;
-            case 2:
-               afficherAide();
-               break;
-            case 3:
-               quitter = true;
-               break;
-         }
-      } while (!gagne() && !quitter);
    }
 
    public void actionOuvertureGrille(String s) {
@@ -117,40 +93,6 @@ public class Grille {
 
    public boolean gagne() {
       return animauxRestants == 0;
-   }
-
-   private String[] getOption() {
-      Scanner sc = new Scanner(System.in);
-      String s;
-      int option = -1;
-      do {
-         System.out.println("[? pour afficher l'aide]\nQue voulez vous jouer ?");
-         s = sc.next();
-         if (s.matches("[A-Z][0-9]+")) {
-            option = 0; // Une case à détruire.
-         } else if (s.matches("[a-z][a-z]")) {
-            option = 1; // Ouvrir un bonus.
-         } else if (s.equals("?")) {
-            option = 2; // Ouvrir l'aide
-         } else if (s.equals("q")) {
-            option = 3; // Quitter le niveau
-         } else {
-            s = "";
-         }
-      } while (s.equals(""));
-      return new String[]{Integer.toString(option), s};
-   }
-
-   private void afficherAide() {
-      clear();
-      System.out.println("""
-               Entrez : 
-               - Le numéro de case pour la détruire (sous la forme LETTRE/NOMBRE)
-               - Les lettres du bonus pour l'utiliser   
-               
-               [Appuyez sur entrée pour quitter l'aide]   
-            """);
-      new Scanner(System.in).nextLine();
    }
 
    public void exportToCSV() throws FileNotFoundException {

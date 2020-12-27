@@ -18,20 +18,6 @@ public class Niveau {
       this.grille = g;
    }
 
-   public void run() {
-      // Lancer un niveau (afficher la grille, faire monter les scores etc)
-      try {
-         System.out.println("Le niveau va commencer ...");
-         Thread.sleep(1000);
-      } catch (InterruptedException e) {
-         e.printStackTrace();
-      }
-      System.out.println("\n");
-      this.grille.run();
-      clear();
-   }
-
-
    public void afficher() {
       System.out.println("Niveau {" + numNiveau + "}");
    }
