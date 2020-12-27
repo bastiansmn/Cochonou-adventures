@@ -77,6 +77,20 @@ public class Launcher {
             case 3 -> quitter = true;
          }
       } while (!g.gagne() && !quitter);
+      clear();
+      System.out.println("""
+                  _____                          _\s
+                 / ____|                        | |
+                | |  __  __ _  __ _ _ __   ___  | |
+                | | |_ |/ _` |/ _` | '_ \\ / _ \\ | |
+                | |__| | (_| | (_| | | | |  __/ |_|
+                 \\_____|\\__,_|\\__, |_| |_|\\___| (_)
+                               __/ |              \s
+                              |___/               \s
+                              
+              Appuyez sur entrée pour quitter...
+            """);
+      new Scanner(System.in).nextLine();
    }
 
    public String[] getOptionGrille() {

@@ -106,7 +106,7 @@ public class Grille {
    }
 
    public boolean gagne() {
-      return animauxRestants == 0;
+      return animauxSauvee == animauxRestants;
    }
 
    public void exportToCSV() throws FileNotFoundException {
