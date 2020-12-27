@@ -33,7 +33,7 @@ public class Grille {
 
       if (i >= 0 && i < cases.length && j >= 0 && j < cases[i].length) {
          if (cases[i][j] != null && cases[i][j].getContent() instanceof BlocCouleur) {
-            ouvrirCase(i, j, ((BlocCouleur) cases[i][j].getContent()).getColor());
+            ouvrirCase(i, j, ((BlocCouleur) cases[i][j].getContent()).getColor(), true);
             nettoyerGrille();
             // TODO : sérialiser le plateau à chaque mouvement ou au moins à chaque fin de jeu (if (gagne()))
          } else {
@@ -57,15 +57,15 @@ public class Grille {
       // TODO : Faire descendre les blocs
    }
 
-   public void ouvrirCase(int i, int j, Color c) {
+   public void ouvrirCase(int i, int j, Color c, boolean premiereOuverture) {
       try {
          if (cases[i][j] != null && cases[i][j].getContent() instanceof BlocCouleur)
-            if (comboPossible(i, j, c) || ((BlocCouleur) cases[i][j].getContent()).getColor() == c) {
+            if (comboPossible(i, j, c) || ((BlocCouleur) cases[i][j].getContent()).getColor() == c && !premiereOuverture) {
                cases[i][j] = new Case(null);
-               ouvrirCase(i - 1, j, c);
-               ouvrirCase(i, j - 1, c);
-               ouvrirCase(i + 1, j, c);
-               ouvrirCase(i, j + 1, c);
+               ouvrirCase(i - 1, j, c, false);
+               ouvrirCase(i, j - 1, c, false);
+               ouvrirCase(i + 1, j, c, false);
+               ouvrirCase(i, j + 1, c, false);
             }
       } catch (ArrayIndexOutOfBoundsException ignored) {}
    }
@@ -126,9 +126,6 @@ public class Grille {
 
       printWriter.close();
    }
-
-   // TODO : Pouvoir créer des tableaux aléatoirement (sans utiliser de CSV)
-
 
    private void compteAnimaux() {
       for (Container[] cont : cases)

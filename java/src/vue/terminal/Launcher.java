@@ -16,8 +16,6 @@ public class Launcher {
       System.out.println("\n");
       Thread.sleep(3000);
 
-      // TODO : Initialisation du plateau. (si partie existante, charger et commencer depuis la partie en question, sinon créer nvelle)
-
       System.out.println("Bienvenue sur Cochonou-adventures " + Jeu.joueur.getNom() + " !\n\n");
       Thread.sleep(3000);
 

@@ -22,6 +22,8 @@ public class Jeu {
    }
 
    public int run() throws InvocationTargetException, InterruptedException {
+      // TODO : Initialisation du plateau. (si partie existante, charger et commencer depuis la partie en question, sinon créer nvelle)
+      
       // Test pour ajouter des niveaux (à enlever plus tard) et ajouter les bonus du joueur:
       Joueur.bonus[0] = new Firework();
       Joueur.bonus[1] = new ColorChange();
