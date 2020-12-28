@@ -16,6 +16,9 @@ public class ColorChange extends Bonus{
 
    @Override
    public void utiliser() {
-      this.nbrRestant--;
+      if (nbrRestant > 0)
+         nbrRestant--;
+
+      // TODO : demander où utiliser, le bonus change la couleur d'un bloc.
    }
 }

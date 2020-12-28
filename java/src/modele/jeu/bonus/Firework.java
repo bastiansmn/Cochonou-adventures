@@ -17,6 +17,9 @@ public class Firework extends Bonus {
 
    @Override
    public void utiliser() {
-      this.nbrRestant--;
+      if (nbrRestant > 0)
+         nbrRestant--;
+
+      // TODO : Demander une case où placer le feu d'artifice, toutes les cases au dessus seront détruites
    }
 }

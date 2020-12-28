@@ -158,7 +158,7 @@ public class Grille {
 
    public void afficherGrille() {
       System.out.println(scoreboard());
-      System.out.print("\t");
+      System.out.print("    ");
       for (int i = 0; i < this.cases[0].length; i++) {
          System.out.print((char) (i + 65) + " ");
       }

@@ -16,6 +16,9 @@ public class Bombe extends Bonus {
 
    @Override
    public void utiliser() {
-      this.nbrRestant--;
+      if (nbrRestant > 0)
+         nbrRestant--;
+
+      // TODO : demander dans quelle case détruire. Ce bonus détruit toutes les cases dans un rayon de 1 bloc.
    }
 }

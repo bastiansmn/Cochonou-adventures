@@ -23,7 +23,7 @@ public class Plateau {
          if (i == indexNiveauActuel) {
             System.out.print(" -> ");
          } else {
-            System.out.print("\t");
+            System.out.print("    ");
          }
          niveaux.get(i).afficher();
       }

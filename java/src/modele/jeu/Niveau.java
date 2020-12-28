@@ -8,6 +8,8 @@ public class Niveau {
 
    private static int nbrNiveau = 0;
 
+   private boolean isGagne = false;
+
    private final int difficulte;
    private final Grille grille;
 
@@ -19,7 +21,11 @@ public class Niveau {
    }
 
    public void afficher() {
-      System.out.println("Niveau {" + numNiveau + "}");
+      System.out.println("Niveau {" + numNiveau + "}" + (isGagne ? " *" : ""));
+   }
+
+   public void marquerCommeGagne() {
+      isGagne = true;
    }
 
    public int getNumNiveau() {

@@ -10,20 +10,22 @@ import java.util.Scanner;
 public class Launcher {
 
    public int runTextual() throws InterruptedException {
-
+      clear();
       // Affichage des titre et phrases de bases du jeu
       afficherTitreJeu();
       System.out.println("\n");
-      Thread.sleep(3000);
+      Thread.sleep(1000);
 
       System.out.println("Bienvenue sur Cochonou-adventures " + Jeu.joueur.getNom() + " !\n\n");
-      Thread.sleep(3000);
+      Thread.sleep(2000);
 
       String reponse;
       do {
+         clear();
          affichageInfoJoueur();
          Jeu.plateau.afficher();
-         System.out.println("[? pour afficher les règles]\n==============\nUtilisez z/s pour changer de niveau, d pour lancer le niveau sélectionné ou entrez le numéro d'un niveau :");
+         System.out.println("\n[* = niveau déjà gagné]");
+         System.out.println("[? pour afficher les règles]\n\n============================\n\nUtilisez z/s pour changer de niveau, d pour lancer le niveau sélectionné ou entrez le numéro d'un niveau :");
          reponse = new Scanner(System.in).next();
 
          if (reponse.matches("[0-9]+")) {
@@ -58,6 +60,8 @@ public class Launcher {
       }
       System.out.println("\n");
       jouerGrille(n.getGrille());
+      if (n.getGrille().gagne())
+         n.marquerCommeGagne();
       clear();
    }
 
@@ -78,11 +82,12 @@ public class Launcher {
             case 3 -> quitter = true;
          }
       } while (!g.gagne() && !quitter);
-      clear();
-      System.out.println("""
-            Votre score :\t""" + g.getScore() + """
+      if (g.gagne()) {
+         clear();
+         System.out.println("""
+            Votre score :   """ + g.getScore() + """
                         
-            Animaux sauvés :\t """ + g.getAnimauxSauvee() + """      
+            Animaux sauvés :    """ + g.getAnimauxSauvee() + """      
             
                   _____                          _\s
                  / ____|                    //  | |
@@ -95,7 +100,8 @@ public class Launcher {
                               
               Appuyez sur entrée pour quitter...
             """);
-      new Scanner(System.in).nextLine();
+         new Scanner(System.in).nextLine();
+      }
    }
 
    public String[] getOptionGrille() {
@@ -145,12 +151,13 @@ public class Launcher {
    }
 
    private void affichageInfoJoueur() {
-      System.out.println(String.format("""
-           =================
-               Votre score : %d
-               Votre nombre de vie : %d
-      
-            """, Jeu.joueur.getScore(), Jeu.joueur.getVie()));
+      System.out.printf("""
+            ============================
+                       
+                Votre score : %d
+                Votre nombre de vie : %d
+                       
+            %n""", Jeu.joueur.getScore(), Jeu.joueur.getVie());
    }
 
    private void clear() {
@@ -172,6 +179,7 @@ public class Launcher {
    }
 
    public void reglesDuJeu() {
+      clear();
       System.out.println("""
            But du jeu :
                - Dans chaques niveau, sauvez tous les animaux.
