@@ -60,8 +60,10 @@ public class Launcher {
       }
       System.out.println("\n");
       jouerGrille(n.getGrille());
-      if (n.getGrille().gagne())
+      if (n.getGrille().gagne())  {
          n.marquerCommeGagne();
+         Jeu.plateau.goToNextLevel();
+      }
       clear();
    }
 

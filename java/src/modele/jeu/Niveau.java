@@ -39,4 +39,8 @@ public class Niveau {
    public int getDifficulte() {
       return difficulte;
    }
+
+   public boolean isGagne() {
+      return isGagne;
+   }
 }

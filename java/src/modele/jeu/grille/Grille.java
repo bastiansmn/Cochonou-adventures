@@ -89,23 +89,19 @@ public class Grille {
          try {
             if (cases[i][j + 1] != null && cases[i][j + 1].getContent() instanceof BlocCouleur && ((BlocCouleur) cases[i][j + 1].getContent()).getColor() == c)
                return true;
-         } catch (ArrayIndexOutOfBoundsException ignored) {
-         }
+         } catch (ArrayIndexOutOfBoundsException ignored) {}
          try {
             if (cases[i][j - 1] != null && cases[i][j - 1].getContent() instanceof BlocCouleur && ((BlocCouleur) cases[i][j - 1].getContent()).getColor() == c)
                return true;
-         } catch (ArrayIndexOutOfBoundsException ignored) {
-         }
+         } catch (ArrayIndexOutOfBoundsException ignored) {}
          try {
             if (cases[i - 1][j] != null && cases[i - 1][j].getContent() instanceof BlocCouleur && ((BlocCouleur) cases[i - 1][j].getContent()).getColor() == c)
                return true;
-         } catch (ArrayIndexOutOfBoundsException ignored) {
-         }
+         } catch (ArrayIndexOutOfBoundsException ignored) {}
          try {
             if (cases[i + 1][j] != null && cases[i + 1][j].getContent() instanceof BlocCouleur && ((BlocCouleur) cases[i + 1][j].getContent()).getColor() == c)
                return true;
-         } catch (ArrayIndexOutOfBoundsException ignored) {
-         }
+         } catch (ArrayIndexOutOfBoundsException ignored) {}
       }
       return false;
    }

@@ -59,6 +59,15 @@ public class Plateau {
       }
    }
 
+   public void goToNextLevel() {
+      for (Niveau n : niveaux) {
+         if (n.isGagne()) {
+            indexNiveauActuel = n.getNumNiveau() + 1;
+            return;
+         }
+      }
+   }
+
    public int getIndexNiveauActuel() {
       return indexNiveauActuel;
    }
