@@ -52,19 +52,24 @@ public class Launcher {
    }
 
    private void jouerNiveau(Niveau n) {
-      try {
-         System.out.println("Le niveau va commencer ...");
-         Thread.sleep(1000);
-      } catch (InterruptedException e) {
-         e.printStackTrace();
+      if (n.canPlay()) {
+         try {
+            System.out.println("Le niveau va commencer ...");
+            Thread.sleep(1000);
+         } catch (InterruptedException e) {
+            e.printStackTrace();
+         }
+         System.out.println("\n");
+         jouerGrille(n.getGrille());
+         if (n.getGrille().gagne())  {
+            n.marquerCommeGagne();
+            Jeu.plateau.goToNextLevel();
+            Jeu.plateau.getNiveaux().get(n.getNumNiveau() + 1).setGagne();
+         }
+         clear();
+      } else {
+         Erreur.afficher("Vous ne pouvez pas jouer ce niveau");
       }
-      System.out.println("\n");
-      jouerGrille(n.getGrille());
-      if (n.getGrille().gagne())  {
-         n.marquerCommeGagne();
-         Jeu.plateau.goToNextLevel();
-      }
-      clear();
    }
 
    private void jouerGrille(Grille g) {
