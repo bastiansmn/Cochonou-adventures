@@ -9,7 +9,7 @@ public class Niveau {
    private static int nbrNiveau = 0;
 
    private boolean isGagne = false;
-   private boolean canPlay = false;
+   private boolean canPlay;
 
    private final int difficulte;
    private final Grille grille;
@@ -22,12 +22,20 @@ public class Niveau {
       this.canPlay = canPlay;
    }
 
+
+
    public void afficher() {
       System.out.println("Niveau {" + numNiveau + "}" + (isGagne ? " *" : ""));
    }
 
    public void marquerCommeGagne() {
       isGagne = true;
+      Jeu.plateau.goToNextLevel();
+      if (numNiveau + 1 < Jeu.plateau.getNiveaux().size()) {
+         Jeu.plateau.getNiveaux().get(numNiveau + 1).setGagne();
+      } else {
+         // Jeu terminés
+      }
    }
 
    public void setGagne() {

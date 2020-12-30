@@ -63,8 +63,6 @@ public class Launcher {
          jouerGrille(n.getGrille());
          if (n.getGrille().gagne())  {
             n.marquerCommeGagne();
-            Jeu.plateau.goToNextLevel();
-            Jeu.plateau.getNiveaux().get(n.getNumNiveau() + 1).setGagne();
          }
          clear();
       } else {
