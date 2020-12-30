@@ -52,19 +52,22 @@ public class Launcher {
    }
 
    private void jouerNiveau(Niveau n) {
-      try {
-         System.out.println("Le niveau va commencer ...");
-         Thread.sleep(1000);
-      } catch (InterruptedException e) {
-         e.printStackTrace();
+      if (n.canPlay()) {
+         try {
+            System.out.println("Le niveau va commencer ...");
+            Thread.sleep(1000);
+         } catch (InterruptedException e) {
+            e.printStackTrace();
+         }
+         System.out.println("\n");
+         jouerGrille(n.getGrille());
+         if (n.getGrille().gagne())  {
+            n.marquerCommeGagne();
+         }
+         clear();
+      } else {
+         Erreur.afficher("Vous ne pouvez pas jouer ce niveau");
       }
-      System.out.println("\n");
-      jouerGrille(n.getGrille());
-      if (n.getGrille().gagne())  {
-         n.marquerCommeGagne();
-         Jeu.plateau.goToNextLevel();
-      }
-      clear();
    }
 
    private void jouerGrille(Grille g) {
@@ -83,7 +86,7 @@ public class Launcher {
             case 2 -> afficherAideGrille();
             case 3 -> quitter = true;
          }
-      } while (!g.gagne() && !quitter);
+      } while (!g.gagne() && !quitter && !g.perdu());
       if (g.gagne()) {
          clear();
          System.out.println("""
@@ -102,6 +105,20 @@ public class Launcher {
                               
               Appuyez sur entrée pour quitter...
             """);
+         new Scanner(System.in).nextLine();
+      } else if (g.perdu()) {
+         System.out.println("""
+                          _____             _         _\s
+                         |  __ \\           | |       | |
+                         | |__) |__ _ __ __| |_   _  | |
+                         |  ___/ _ \\ '__/ _` | | | | | |
+                         | |  |  __/ | | (_| | |_| | |_|
+                         |_|   \\___|_|  \\__,_|\\__,_| (_)
+                                                       \s
+                                                       \s
+                                                       
+                         Appuyez sur entrée pour quitter ...
+                     """);
          new Scanner(System.in).nextLine();
       }
    }

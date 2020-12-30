@@ -60,11 +60,8 @@ public class Plateau {
    }
 
    public void goToNextLevel() {
-      for (Niveau n : niveaux) {
-         if (n.isGagne()) {
-            indexNiveauActuel = n.getNumNiveau() + 1;
-            return;
-         }
+      if (indexNiveauActuel + 1 < this.niveaux.size()) {
+         indexNiveauActuel++;
       }
    }
 
