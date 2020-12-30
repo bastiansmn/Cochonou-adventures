@@ -12,6 +12,7 @@ import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.Scanner;
 
 
 public class Grille {
@@ -20,9 +21,13 @@ public class Grille {
    private Container[][] cases;
 
    private int largeur, longueur;
+   private String fileName;
+   private String separator;
    private int score = 0;
    private int animauxSauvee = 0;
    private int animauxRestants;
+   private int nombreLimiteDeCoup;
+   private boolean perdu = false;
 
    public void actionOuvertureGrille(String s) {
       int j = s.toUpperCase().charAt(0) - 65;
@@ -32,6 +37,14 @@ public class Grille {
          if (cases[i][j] != null && cases[i][j].getContent() instanceof BlocCouleur) {
             this.score += (int) (1000 * Math.pow(ouvrirCase(i, j, ((BlocCouleur) cases[i][j].getContent()).getColor(), true), 2));
             nettoyerGrille();
+            nombreLimiteDeCoup--;
+            if (nombreLimiteDeCoup == 0) {
+               perdu = true;
+               Jeu.joueur.perdreUneVie();
+               try {
+                  this.getCSV(fileName, separator);
+               } catch (CSVNotValidException ignored) {}
+            }
             // TODO : sérialiser le plateau à chaque mouvement ou au moins à chaque fin de jeu (if (gagne()))
          } else {
             Erreur.afficher("Impossible de casser ce bloc");
@@ -114,6 +127,10 @@ public class Grille {
       return false;
    }
 
+   public boolean perdu() {
+      return perdu;
+   }
+
    public void exportToCSV() throws FileNotFoundException {
       PrintWriter printWriter = new PrintWriter("myNewLevel.csv");
 
@@ -185,6 +202,7 @@ public class Grille {
       return "┌───────────────────┐\n" +
             "│  Score : " + "0".repeat(7 - Integer.toString(this.score).length()) + this.score + "  │\n" +
             "│  Animaux :  " + this.animauxSauvee + '/' + this.animauxRestants + "   │\n" +
+            "│  Coups rest. : "+this.nombreLimiteDeCoup+ " ".repeat(Math.abs(Integer.toString(this.nombreLimiteDeCoup).length() - 2)) + " │\n" +
             "│  Bonus :          │\n" +
             "│  " + Arrays.toString(Joueur.bonus).replace("[", "").replace("]", "").replace(",", "").replaceAll("null", "--") + "   │\n" +
             "│  " + afficherNbrBonus() + "  │\n" +
@@ -219,7 +237,10 @@ public class Grille {
    public Grille getCSV(String fileName, String separator) throws CSVNotValidException {
       CSVImport csv = new CSVImport(fileName, separator);
 
+      this.fileName = fileName;
+      this.separator = separator;
       this.cases = csv.getCases();
+      this.nombreLimiteDeCoup = csv.getMaxMoves();
       compteAnimaux();
 
       this.longueur = this.cases.length;

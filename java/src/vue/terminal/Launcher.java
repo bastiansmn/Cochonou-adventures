@@ -86,7 +86,7 @@ public class Launcher {
             case 2 -> afficherAideGrille();
             case 3 -> quitter = true;
          }
-      } while (!g.gagne() && !quitter);
+      } while (!g.gagne() && !quitter && !g.perdu());
       if (g.gagne()) {
          clear();
          System.out.println("""
@@ -105,6 +105,20 @@ public class Launcher {
                               
               Appuyez sur entrée pour quitter...
             """);
+         new Scanner(System.in).nextLine();
+      } else if (g.perdu()) {
+         System.out.println("""
+                          _____             _         _\s
+                         |  __ \\           | |       | |
+                         | |__) |__ _ __ __| |_   _  | |
+                         |  ___/ _ \\ '__/ _` | | | | | |
+                         | |  |  __/ | | (_| | |_| | |_|
+                         |_|   \\___|_|  \\__,_|\\__,_| (_)
+                                                       \s
+                                                       \s
+                                                       
+                         Appuyez sur entrée pour quitter ...
+                     """);
          new Scanner(System.in).nextLine();
       }
    }
