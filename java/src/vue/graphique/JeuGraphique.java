@@ -19,8 +19,6 @@ import modele.outils.Joueur;
 import modele.outils.erreurs.CSVNotValidException;
 
 public class JeuGraphique extends JFrame {
-    private final Joueur joueur;
-    private final Plateau plateau;
     CardLayout cl;
     JPanel general = new JPanel();
     JPanel menu = new Menu(this, 96,98);
@@ -28,14 +26,8 @@ public class JeuGraphique extends JFrame {
     JDialog regles;
     JLabel[] etiquettes = new JLabel[100];
 
-    public CardLayout getCl() {
-        return cl;
-    }
-
-    public JeuGraphique(Joueur j, Plateau p) {
+    public JeuGraphique() {
         super();
-        this.joueur = j;
-        this.plateau = p;
         this.cl = new CardLayout();
         this.setTitle("COCHONOU-ADVENTURES");
         this.setSize(1000, 835);
@@ -48,13 +40,5 @@ public class JeuGraphique extends JFrame {
         this.cl.show(this.general, "Menu");
         this.add(this.general);
         this.setVisible(true);
-    }
-
-    public static void main(String[] args) throws CSVNotValidException {
-        Joueur j = new Joueur("Dylan");
-        Plateau p = new Plateau();
-        p.ajouterNiveau(new Niveau(1, new Grille().getCSV("niveaux/nv1.csv", ";")));
-        new Plateau();
-        new JeuGraphique(j, p);
     }
 }

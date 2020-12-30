@@ -7,10 +7,7 @@ public class Launcher {
 
 
    public int runGraphical() throws InvocationTargetException, InterruptedException {
-      SwingUtilities.invokeAndWait(() -> {
-         // TODO : Instancier la fenetre
-      });
-
+      JeuGraphique g = new JeuGraphique();
       return 0;
    }
 }
