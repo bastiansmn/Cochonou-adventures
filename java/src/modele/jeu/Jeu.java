@@ -33,9 +33,9 @@ public class Jeu {
 
       try {
          plateau.ajouterNiveau(new Niveau(1, new Grille().getCSV("niveaux/nv1.csv", ";")));
-         plateau.ajouterNiveau(new Niveau(2, new Grille().getCSV("niveaux/nv1.csv", ";")));
-         plateau.ajouterNiveau(new Niveau(3, new Grille().getCSV("niveaux/nv1.csv", ";")));
-         plateau.ajouterNiveau(new Niveau(4, new Grille().getCSV("niveaux/nv1.csv", ";")));
+         plateau.ajouterNiveau(new Niveau(2, new Grille().getCSV("niveaux/nv2.csv", ";")));
+         plateau.ajouterNiveau(new Niveau(3, new Grille().getCSV("niveaux/nv3.csv", ";")));
+         plateau.ajouterNiveau(new Niveau(4, new Grille().getCSV("niveaux/nv4.csv", ";")));
       } catch (CSVNotValidException e) {
          e.printStackTrace();
       }
