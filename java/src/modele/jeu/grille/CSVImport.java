@@ -1,9 +1,6 @@
 package modele.jeu.grille;
 
-import modele.jeu.animaux.Chat;
-import modele.jeu.animaux.Chien;
-import modele.jeu.animaux.Oiseau;
-import modele.jeu.animaux.Panda;
+import modele.jeu.animaux.*;
 import modele.jeu.grille.blocs.BlocBombe;
 import modele.jeu.grille.blocs.BlocCouleur;
 import modele.jeu.grille.blocs.BlocObstacle;
@@ -59,6 +56,7 @@ public class CSVImport extends CSVObject {
                case "oiseau" -> this.cases[i-1][j] = new Case(new Oiseau(""));
                case "chat" -> this.cases[i-1][j] = new Case(new Chat(""));
                case "chien" -> this.cases[i-1][j] = new Case(new Chien(""));
+               case "cochon" -> this.cases[i-1][j] = new Case(new Cochon(""));
                case "panda" -> this.cases[i-1][j] = new Case(new Panda(""));
                case "bombe" -> this.cases[i-1][j] = new Case(new BlocBombe());
                case "obstacle" -> this.cases[i-1][j] = new Case(new BlocObstacle());

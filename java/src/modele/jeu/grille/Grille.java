@@ -184,7 +184,7 @@ public class Grille {
             } else if (this.cases[i][j].getContent() == null) {
                System.out.print("  ");
             } else if (this.cases[i][j].getContent() instanceof Animal) {
-               System.out.print(((Animal) this.cases[i][j].getContent()).getInitiale() + " ");
+               System.out.print(((Animal) this.cases[i][j].getContent()).getInitiale() + " ".repeat(Math.abs(((Animal) this.cases[i][j].getContent()).getInitiale().length() - 2)));
             } else if (this.cases[i][j].getContent() instanceof BlocCouleur) {
                ((BlocCouleur) this.cases[i][j].getContent()).printColorInTerminal();
             } else if (this.cases[i][j].getContent() instanceof BlocObstacle) {
