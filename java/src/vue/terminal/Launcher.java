@@ -2,7 +2,11 @@ package vue.terminal;
 
 import modele.jeu.Jeu;
 import modele.jeu.Niveau;
+import modele.jeu.animaux.Animal;
 import modele.jeu.grille.Grille;
+import modele.jeu.grille.blocs.BlocBombe;
+import modele.jeu.grille.blocs.BlocCouleur;
+import modele.jeu.grille.blocs.BlocObstacle;
 import modele.outils.erreurs.Erreur;
 
 import java.util.Scanner;
@@ -11,7 +15,6 @@ public class Launcher {
 
    public int runTextual() throws InterruptedException {
       clear();
-      // Affichage des titre et phrases de bases du jeu
       afficherTitreJeu();
       System.out.println("\n");
       Thread.sleep(1000);
