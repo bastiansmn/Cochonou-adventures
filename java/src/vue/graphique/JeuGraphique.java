@@ -23,7 +23,7 @@ import modele.outils.erreurs.CSVNotValidException;
 public class JeuGraphique extends JFrame {
     CardLayout cl;
     JPanel general = new JPanel();
-    JPanel menu = new Menu(this, Jeu.plateau.getIndexNiveauActuel(), compterNiveaux());
+    JPanel menu = new Menu(this, 21, 100);
     JDialog regles;
 
     public JeuGraphique() {
