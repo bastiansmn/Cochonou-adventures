@@ -1,33 +1,28 @@
 package vue.graphique;
 
 import modele.jeu.Niveau;
+import modele.jeu.grille.Grille;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 
 public class Menu extends vue.graphique.ImagePanel implements ActionListener {
     JeuGraphique fenetre;
     JLabel[] etiquettes = new JLabel[10];
-    JButton bouton1, bouton2, bouton3, bouton4, bouton5, bouton6, bouton7, bouton8, bouton9, bouton10, suivant, precedent;
-
-    int compterNiveaux() {
-        File repertoire = new File("niveaux");
-        File[] f = repertoire.listFiles();
-        int x = 0;
-        for (int i = 0 ; i < f.length ; i++) {
-            if (f[i].isFile()) {
-                x++;
-            }
-        }
-        return x;
-    }
+    JButton precedent, suivant;
+    ArrayList<JButton> boutons = new ArrayList<>();
+    Grille g = modele.jeu.Jeu.plateau.getNiveaux().get(0).getGrille();
+    JPanel jeu = new Jeu(fenetre, g);
+    int Niveau;
 
     public Menu(JeuGraphique f, int niveauActuel, int niveauMax) {
         super(new ImageIcon("fond.jpg").getImage());
         this.fenetre = f;
+        this.Niveau = niveauActuel;
         this.setLayout(null);
         creationBoutons(niveauActuel,niveauMax);
         this.setVisible(true);
@@ -35,8 +30,9 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
 
     class Niveau extends JButton {
         public int index = 0;
+        int niveau;
         Niveau(int i, int x, int y) {
-            int niveau = i + 1;
+            niveau = i + 1;
             etiquettes[index] = new JLabel("NIVEAU " + niveau);
             if (i % 10 == 4) {
                 etiquettes[index].setForeground(new Color(50, 13, 62));
@@ -70,75 +66,92 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
         } else {
             max = Math.abs((niveauActuel-niveauActuel%10)-niveauMax);
         }
-        for(int i = 0; i <= max; i++) {
+        for(int i = 0; i < max; i++) {
+            if(i == 0) {
+                boutons.add(new Niveau((niveauActuel-niveauActuel%10), 450, 10));
+            }
             if(i == 1) {
-                bouton1 = new Niveau((niveauActuel - niveauActuel % 10), 450, 10);
-                bouton1.addActionListener(this);
-                this.add(bouton1);
+                boutons.add(new Niveau((niveauActuel-niveauActuel%10) + 1, 265, 55));
             }
             if(i == 2) {
-                bouton2 = new Niveau((niveauActuel - niveauActuel % 10) + 1, 265, 55);
-                bouton2.addActionListener(this);
-                this.add(bouton2);
+                boutons.add(new Niveau((niveauActuel-niveauActuel%10) + 2, 445, 115));
             }
             if(i == 3) {
-                bouton3 = new Niveau((niveauActuel - niveauActuel % 10) + 2, 445, 115);
-                bouton3.addActionListener(this);
-                this.add(bouton3);
+                boutons.add(new Niveau((niveauActuel-niveauActuel%10) + 3, 335, 190));
             }
             if(i == 4) {
-                bouton4 = new Niveau((niveauActuel - niveauActuel % 10) + 3, 335, 190);
-                bouton4.addActionListener(this);
-                this.add(bouton4);
+                boutons.add(new Niveau((niveauActuel-niveauActuel%10) + 4, 265, 285));
             }
             if(i == 5) {
-                bouton5 = new Niveau((niveauActuel - niveauActuel % 10) + 4, 265, 285);
-                bouton5.addActionListener(this);
-                this.add(bouton5);
+                boutons.add(new Niveau((niveauActuel-niveauActuel%10) + 5, 545, 325));
             }
             if(i == 6) {
-                bouton6 = new Niveau((niveauActuel - niveauActuel % 10) + 5, 545, 325);
-                bouton6.addActionListener(this);
-                this.add(bouton6);
+                boutons.add(new Niveau((niveauActuel-niveauActuel%10) + 6, 665, 465));
             }
             if(i == 7) {
-                bouton7 = new Niveau((niveauActuel - niveauActuel % 10) + 6, 665, 465);
-                bouton7.addActionListener(this);
-                this.add(bouton7);
+                boutons.add(new Niveau((niveauActuel-niveauActuel%10) + 7, 350, 485));
             }
             if(i == 8) {
-                bouton8 = new Niveau((niveauActuel - niveauActuel % 10) + 7, 350, 485);
-                bouton8.addActionListener(this);
-                this.add(bouton8);
+                boutons.add(new Niveau((niveauActuel-niveauActuel%10) + 8, 130, 555));
             }
             if(i == 9) {
-                bouton9 = new Niveau((niveauActuel - niveauActuel % 10) + 8, 130, 555);
-                bouton9.addActionListener(this);
-                this.add(bouton9);
+                boutons.add(new Niveau((niveauActuel-niveauActuel%10) + 9, 295, 670));
             }
-            if(i == 10) {
-                bouton10 = new Niveau((niveauActuel - niveauActuel % 10) + 9, 295, 670);
-                bouton10.addActionListener(this);
-                this.add(bouton10);
-            }
+            boutons.get(i).addActionListener(this);
+            this.add(boutons.get(i));
         }
     }
 
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
+        fenetre.general.add(jeu, "Jeu");
 
-        if(source == precedent){
-            JPanel menuBis = new Menu(fenetre, 1,100);
+        if (source == precedent) {
+            JPanel menuBis = new Menu(fenetre, Niveau = Niveau-10, 100);
             fenetre.general.add(menuBis, "MenuBis");
             fenetre.cl.show(fenetre.general, "MenuBis");
         }
-        if(source == suivant){
-            JPanel menuBis = new Menu(fenetre, 21,100);
+        else if (source == suivant) {
+            JPanel menuBis = new Menu(fenetre, Niveau = Niveau+10, 100);
             fenetre.general.add(menuBis, "MenuBis");
             fenetre.cl.show(fenetre.general, "MenuBis");
-        }
-        if(source == bouton1) {
+        } else {
+            if(source == boutons.get(0)) {
+                Niveau = (Niveau-Niveau%10);
+            }
+            else if(source == boutons.get(1)) {
+                Niveau = (Niveau-Niveau%10)+1;
+            }
+            else if(source == boutons.get(2)) {
+                Niveau = (Niveau-Niveau%10)+2;
+            }
+            else if(source == boutons.get(3)) {
+                Niveau = (Niveau-Niveau%10)+3;
+            }
+            else if(source == boutons.get(4)) {
+                Niveau = (Niveau-Niveau%10)+4;
+            }
+            else if(source == boutons.get(5)) {
+                Niveau = (Niveau-Niveau%10)+5;
+            }
+            else if(source == boutons.get(6)) {
+                Niveau = (Niveau-Niveau%10)+6;
+            }
+            else if(source == boutons.get(7)) {
+                Niveau = (Niveau-Niveau%10)+7;
+            }
+            else if(source == boutons.get(8)) {
+                Niveau = (Niveau-Niveau%10)+8;
+            }
+            else if(source == boutons.get(9)) {
+                Niveau = (Niveau-Niveau%10)+9;
+            }
+            fenetre.remove(jeu);
+            Grille g = modele.jeu.Jeu.plateau.getNiveaux().get(Niveau).getGrille();
+            jeu = new Jeu(fenetre, g);
+            fenetre.general.add(jeu, "Jeu");
             fenetre.cl.show(fenetre.general, "Jeu");
+            fenetre.validate();
         }
     }
 }

@@ -1,5 +1,7 @@
 package vue.graphique;
 
+import modele.jeu.Jeu;
+
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 

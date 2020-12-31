@@ -248,4 +248,16 @@ public class Grille {
 
       return this;
    }
+
+   public int getLongueur() {
+      return longueur;
+   }
+
+   public int getLargeur() {
+      return largeur;
+   }
+
+   public Container[][] getCases() {
+      return cases;
+   }
 }

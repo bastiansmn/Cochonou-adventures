@@ -12,6 +12,8 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import modele.jeu.Jeu;
 import modele.jeu.Niveau;
 import modele.jeu.Plateau;
 import modele.jeu.grille.Grille;
@@ -21,10 +23,8 @@ import modele.outils.erreurs.CSVNotValidException;
 public class JeuGraphique extends JFrame {
     CardLayout cl;
     JPanel general = new JPanel();
-    JPanel menu = new Menu(this, 96,98);
-    JPanel jeu = new Jeu(this);
+    JPanel menu = new Menu(this, Jeu.plateau.getIndexNiveauActuel(), compterNiveaux());
     JDialog regles;
-    JLabel[] etiquettes = new JLabel[100];
 
     public JeuGraphique() {
         super();
@@ -36,9 +36,21 @@ public class JeuGraphique extends JFrame {
         this.setResizable(false);
         this.general.setLayout(cl);
         this.general.add(this.menu, "Menu");
-        this.general.add(this.jeu,"Jeu");
         this.cl.show(this.general, "Menu");
         this.add(this.general);
         this.setVisible(true);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
+
+    int compterNiveaux() {
+        File repertoire = new File("niveaux");
+        File[] f = repertoire.listFiles();
+        int x = 0;
+        for (int i = 0 ; i < f.length ; i++) {
+            if (f[i].isFile()) {
+                x++;
+            }
+        }
+        return x;
     }
 }
