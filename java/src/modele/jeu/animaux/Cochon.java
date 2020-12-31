@@ -1,8 +1,8 @@
 package modele.jeu.animaux;
 
 public class Cochon extends Animal{
-   public Cochon(String nom, String initiale) {
-      super(nom, initiale);
+   public Cochon(String nom) {
+      super(nom, "Co");
    }
 
    @Override
