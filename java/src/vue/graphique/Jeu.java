@@ -6,6 +6,7 @@ import modele.jeu.grille.blocs.BlocBombe;
 import modele.jeu.grille.blocs.BlocCouleur;
 import modele.jeu.grille.blocs.BlocObstacle;
 import modele.jeu.grille.*;
+import modele.outils.erreurs.CSVNotValidException;
 import modele.outils.erreurs.Erreur;
 
 import javax.swing.*;
@@ -19,6 +20,7 @@ public class Jeu extends vue.graphique.ImagePanel implements ActionListener {
     JButton[] boutons;
     int index = 0;
     GridBagLayout gl = new GridBagLayout();
+    private int nombreLimiteDeCoup;
 
     public Jeu(JeuGraphique f, Grille g) {
         super(new ImageIcon("niveaux.jpg").getImage());
@@ -79,6 +81,36 @@ public class Jeu extends vue.graphique.ImagePanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         GridBagConstraints test = gl.getConstraints((Component) e.getSource());
-        Niveau n = new Niveau(fenetre, grille, grille.);
+        test.fill = GridBagConstraints.HORIZONTAL;
+        this.removeAll();
+        grille.actionOuvertureGrille(test.gridx, test.gridy);
+        if(grille.gagne()) {
+            Icon img = new ImageIcon("gagne.png");
+            JLabel victoire = new JLabel();
+            victoire.setIcon(img);
+            this.add(victoire);
+            test.gridx = 10;
+            test.gridy = 50;
+            JButton continuer = new JButton("Continuer");
+            continuer.setBounds(10,750,100,40);
+            continuer.setBackground(new Color(0, 0, 0));
+            continuer.setForeground(new Color(255,255,255));
+            continuer.addActionListener(this);
+            this.add(continuer, test);
+            test.gridx = 30;
+            test.gridy = 300;
+            JButton recommencer = new JButton("Recommencer");
+            recommencer.setBounds(300,400,100,40);
+            recommencer.setBackground(new Color(0, 0, 0));
+            recommencer.setForeground(new Color(255,255,255));
+            recommencer.addActionListener(this);
+            this.add(recommencer, test);
+            this.repaint();
+            this.validate();
+        } else {
+            this.repaint();
+            this.Afficher(grille);
+            this.validate();
+        }
     }
 }

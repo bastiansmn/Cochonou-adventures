@@ -49,4 +49,8 @@ public class Joueur {
    public Bonus[] getBonus() {
       return bonus;
    }
+
+   public void setScore(int score) {
+      this.score = score;
+   }
 }

@@ -54,6 +54,31 @@ public class Grille {
       }
    }
 
+   public void actionOuvertureGrille(int x, int y) {
+      int j = x;
+      int i = y;
+
+      if (i >= 0 && i < cases.length && j >= 0 && j < cases[i].length) {
+         if (cases[i][j] != null && cases[i][j].getContent() instanceof BlocCouleur) {
+            this.score += (int) (1000 * Math.pow(ouvrirCase(i, j, ((BlocCouleur) cases[i][j].getContent()).getColor(), true), 2));
+            nettoyerGrille();
+            nombreLimiteDeCoup--;
+            if (nombreLimiteDeCoup == 0) {
+               perdu = true;
+               Jeu.joueur.perdreUneVie();
+               try {
+                  this.getCSV(fileName, separator);
+               } catch (CSVNotValidException ignored) {}
+            }
+            // TODO : sérialiser le plateau à chaque mouvement ou au moins à chaque fin de jeu (if (gagne()))
+         } else {
+            Erreur.afficher("Impossible de casser ce bloc");
+         }
+      } else {
+         Erreur.afficher("La case n'est pas valide");
+      }
+   }
+
    public void actionBonus(String s) {
       for (Bonus bonusInitiales : Joueur.bonus)
          if (s.equals(bonusInitiales.getInit())) {
