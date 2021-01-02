@@ -1,5 +1,7 @@
 package modele.jeu.bonus;
 
+import modele.jeu.Jeu;
+
 public class Bombe extends Bonus {
 
    private int nbrRestant;
@@ -19,6 +21,8 @@ public class Bombe extends Bonus {
       if (nbrRestant > 0)
          nbrRestant--;
 
-      // TODO : demander dans quelle case détruire. Ce bonus détruit toutes les cases dans un rayon de 1 bloc.
+      if (Jeu.type.equals("-t") || Jeu.type.equals("--textual")) {
+
+      }
    }
 }

@@ -14,12 +14,7 @@ public class CSVImport extends CSVObject {
    private Container[][] cases;
 
    public CSVImport(String fileName) {
-      super(fileName);
-      try {
-         convertToGrid();
-      } catch (CSVNotValidException e) {
-         e.printStackTrace();
-      }
+      this(fileName, ",");
    }
 
    public CSVImport(String fileName, String separator) {

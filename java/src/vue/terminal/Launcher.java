@@ -3,12 +3,15 @@ package vue.terminal;
 import modele.jeu.Jeu;
 import modele.jeu.Niveau;
 import modele.jeu.animaux.Animal;
+import modele.jeu.bonus.Bonus;
 import modele.jeu.grille.Grille;
 import modele.jeu.grille.blocs.BlocBombe;
 import modele.jeu.grille.blocs.BlocCouleur;
 import modele.jeu.grille.blocs.BlocObstacle;
+import modele.outils.Joueur;
 import modele.outils.erreurs.Erreur;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Launcher {
@@ -77,14 +80,13 @@ public class Launcher {
       boolean quitter = false;
       do {
          clear();
-         g.scoreboard();
-         g.afficherGrille();
+         afficherGrille(g);
 
          // Demander l'action à faire.
          String[] option = getOptionGrille();
 
          switch (Integer.parseInt(option[0])) {
-            case 0 -> g.actionOuvertureGrille(option[1]);
+            case 0 -> g.actionOuvertureGrille(Integer.parseInt(option[1].substring(1)) - 1, option[1].toUpperCase().charAt(0) - 65);
             case 1 -> g.actionBonus(option[1]);
             case 2 -> afficherAideGrille();
             case 3 -> quitter = true;
@@ -126,6 +128,42 @@ public class Launcher {
       }
    }
 
+   public void afficherGrille(Grille g) {
+      System.out.println("┌───────────────────┐\n" +
+            "│  Score : " + "0".repeat(7 - Integer.toString(g.getScore()).length()) + g.getScore() + "  │\n" +
+            "│  Animaux :  " + g.getAnimauxSauvee() + '/' + g.getAnimauxRestants() + "   │\n" +
+            "│  Coups rest. : " + g.getNombreLimiteDeCoup() + " ".repeat(Math.abs(Integer.toString(g.getNombreLimiteDeCoup()).length() - 2)) + " │\n" +
+            "│  Bonus :          │\n" +
+            "│  " + Arrays.toString(Joueur.bonus).replace("[", "").replace("]", "").replace(",", "").replaceAll("null", "--") + "   │\n" +
+            "│  " + afficherNbrBonus() + "  │\n" +
+            "└───────────────────┘\n");
+      System.out.print("    ");
+      for (int i = 0; i < g.getCases()[0].length; i++) {
+         System.out.print((char) (i + 65) + " ");
+      }
+      System.out.println("\n  ┌─" + "──".repeat((g.getLargeur())) + "─┐");
+      for (int i = 0; i < g.getLongueur(); i++) {
+         System.out.print((i + 1) + " ".repeat(Integer.toString(i + 1).length() % 2) + "│ ");
+         for (int j = 0; j < g.getLargeur(); j++) {
+            if (g.getCases()[i][j] == null) {
+               System.out.print("██");
+            } else if (g.getCases()[i][j].getContent() == null) {
+               System.out.print("  ");
+            } else if (g.getCases()[i][j].getContent() instanceof Animal) {
+               System.out.print(((Animal) g.getCases()[i][j].getContent()).getInitiale() + " ".repeat(Math.abs(((Animal) g.getCases()[i][j].getContent()).getInitiale().length() - 2)));
+            } else if (g.getCases()[i][j].getContent() instanceof BlocCouleur) {
+               ((BlocCouleur) g.getCases()[i][j].getContent()).printColorInTerminal();
+            } else if (g.getCases()[i][j].getContent() instanceof BlocObstacle) {
+               System.out.print("▓▓");
+            } else if (g.getCases()[i][j].getContent() instanceof BlocBombe) {
+               System.out.print("* ");
+            }
+         }
+         System.out.println(" │");
+      }
+      System.out.println("  └─" + "──".repeat((g.getLargeur())) + "─┘");
+   }
+
    public String[] getOptionGrille() {
       Scanner sc = new Scanner(System.in);
       String s;
@@ -158,6 +196,14 @@ public class Launcher {
                [Appuyez sur entrée pour quitter l'aide]   
             """);
       new Scanner(System.in).nextLine();
+   }
+
+   private String afficherNbrBonus() {
+      StringBuilder s = new StringBuilder();
+      for (Bonus b : Joueur.bonus) {
+         s.append("(").append(b.getNombreRestant()).append(")");
+      }
+      return s.toString();
    }
 
    private void afficherTitreJeu() {
