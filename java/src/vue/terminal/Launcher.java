@@ -76,7 +76,7 @@ public class Launcher {
       }
    }
 
-   private void jouerGrille(Grille g) {
+   public void jouerGrille(Grille g) {
       boolean quitter = false;
       do {
          clear();

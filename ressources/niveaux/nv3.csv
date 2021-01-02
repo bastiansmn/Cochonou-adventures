@@ -1,8 +1,8 @@
-6
-null;chien;null;null;null;oiseau;null
-bleu;bleu;vert;vert;bleu;bleu;jaune
-bleu;bleu;rose;rose;bleu;bleu;jaune
-vert;vert;rose;rose;vert;jaune;rouge
-vert;vert;rose;rose;rose;jaune;rouge
-bleu;jaune;bleu;vert;rose;rouge;vert
-bleu;jaune;jaune;vert;rose;rouge;vert
+6;;;;;;
+null;chien;null;null;null;chat;null
+bleu;bleu;obstacle;vert;bleu;bleu;jaune
+bleu;bleu;rose;chat;panda;bleu;jaune
+chien;vert;cochon;rose;vert;jaune;rouge
+vert;bombe;rose;panda;rose;jaune;rouge
+bleu;jaune;bleu;chien;rose;rouge;vert
+cochon;jaune;jaune;vert;rose;rouge;vert
