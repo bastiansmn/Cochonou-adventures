@@ -12,7 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class Partie extends vue.graphique.ImagePanel implements ActionListener {
+public class Partie extends vue.graphique.ImagePanel implements ActionListener {
     Fenetre fenetre;
     Grille grille;
     JButton[] boutons;
@@ -79,31 +79,31 @@ class Partie extends vue.graphique.ImagePanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        GridBagConstraints test = gl.getConstraints((Component) e.getSource());
-        test.fill = GridBagConstraints.HORIZONTAL;
+        GridBagConstraints updateGrille = gl.getConstraints((Component) e.getSource());
+        updateGrille.fill = GridBagConstraints.HORIZONTAL;
         this.removeAll();
-        grille.actionOuvertureGrille(test.gridy, test.gridx);
+        grille.actionOuvertureGrille(updateGrille.gridy, updateGrille.gridx);
         if(grille.gagne()) {
             Icon img = new ImageIcon("gagne.png");
             JLabel victoire = new JLabel();
             victoire.setIcon(img);
             this.add(victoire);
-            test.gridx = 10;
-            test.gridy = 50;
+            updateGrille.gridx = 10;
+            updateGrille.gridy = 50;
             JButton continuer = new JButton("Continuer");
             continuer.setBounds(10,750,100,40);
             continuer.setBackground(new Color(0, 0, 0));
             continuer.setForeground(new Color(255,255,255));
             continuer.addActionListener(this);
-            this.add(continuer, test);
-            test.gridx = 30;
-            test.gridy = 300;
+            this.add(continuer, updateGrille);
+            updateGrille.gridx = 30;
+            updateGrille.gridy = 300;
             JButton recommencer = new JButton("Recommencer");
             recommencer.setBounds(300,400,100,40);
             recommencer.setBackground(new Color(0, 0, 0));
             recommencer.setForeground(new Color(255,255,255));
             recommencer.addActionListener(this);
-            this.add(recommencer, test);
+            this.add(recommencer, updateGrille);
             this.repaint();
             this.validate();
         } else {

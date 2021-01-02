@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 
 import modele.jeu.Jeu;
 
-class Fenetre extends JFrame {
+public class Fenetre extends JFrame {
     CardLayout cl;
     JPanel general = new JPanel();
     JPanel menu = new Menu(this, Jeu.plateau.getIndexNiveauActuel(), Jeu.plateau.getNiveaux().size());
