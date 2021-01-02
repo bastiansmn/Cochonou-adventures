@@ -6,23 +6,20 @@ import modele.jeu.grille.blocs.BlocBombe;
 import modele.jeu.grille.blocs.BlocCouleur;
 import modele.jeu.grille.blocs.BlocObstacle;
 import modele.jeu.grille.*;
-import modele.outils.erreurs.CSVNotValidException;
-import modele.outils.erreurs.Erreur;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Jeu extends vue.graphique.ImagePanel implements ActionListener {
-    JeuGraphique fenetre;
+class Partie extends vue.graphique.ImagePanel implements ActionListener {
+    Fenetre fenetre;
     Grille grille;
     JButton[] boutons;
     int index = 0;
     GridBagLayout gl = new GridBagLayout();
-    private int nombreLimiteDeCoup;
 
-    public Jeu(JeuGraphique f, Grille g) {
+    public Partie(Fenetre f, Grille g) {
         super(new ImageIcon("niveaux.jpg").getImage());
         this.fenetre = f;
         this.grille = g;
@@ -71,6 +68,8 @@ public class Jeu extends vue.graphique.ImagePanel implements ActionListener {
                         boutons[index].setIcon(new ImageIcon("case-obstacle.jpg"));
                     } else if (g.getCases()[i][j].getContent() instanceof BlocBombe) {
                         boutons[index].setIcon(new ImageIcon("case-bombe.jpg"));
+                    } else if (g.getCases()[i][j].getContent() == null) {
+                        boutons[index].setIcon(new ImageIcon("case-vide.jpg"));
                     }
                     boutons[index].addActionListener(this);
                 }
@@ -83,7 +82,7 @@ public class Jeu extends vue.graphique.ImagePanel implements ActionListener {
         GridBagConstraints test = gl.getConstraints((Component) e.getSource());
         test.fill = GridBagConstraints.HORIZONTAL;
         this.removeAll();
-        grille.actionOuvertureGrille(test.gridx, test.gridy);
+        grille.actionOuvertureGrille(test.gridy, test.gridx);
         if(grille.gagne()) {
             Icon img = new ImageIcon("gagne.png");
             JLabel victoire = new JLabel();
