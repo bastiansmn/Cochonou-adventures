@@ -19,25 +19,6 @@ public class Plateau implements Serializable {
       this.niveaux.add(n);
    }
 
-   public void afficher() {
-      for (int i = 0; i < niveaux.size(); i++) {
-         if (i == indexNiveauActuel) {
-            System.out.print(" -> ");
-         } else {
-            System.out.print("    ");
-         }
-         niveaux.get(i).afficher();
-      }
-   }
-
-   @Override
-   public String toString() {
-      return "Plateau{" +
-            "niveaux=" + niveaux +
-            ", indexNiveauActuel=" + indexNiveauActuel +
-            '}';
-   }
-
    public Niveau jouerNiveauParNumero(int num) {
       if (num < niveaux.size()) {
          if (indexNiveauActuel > num)

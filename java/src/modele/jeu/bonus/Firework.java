@@ -1,14 +1,16 @@
 package modele.jeu.bonus;
 
-public class Firework extends Bonus {
+import modele.jeu.Jeu;
+import modele.jeu.Niveau;
+import modele.jeu.grille.blocs.BlocBombe;
+import modele.jeu.grille.blocs.Ouvrable;
 
-   private int nbrRestant;
+public class Firework extends Bonus {
 
    public Firework() {
       super("fw");
       this.nbrRestant = 3;
    }
-
 
    @Override
    public int getNombreRestant() {
@@ -20,6 +22,14 @@ public class Firework extends Bonus {
       if (nbrRestant > 0)
          nbrRestant--;
 
+      Niveau.Grille g = Jeu.plateau.getNiveaux().get(Jeu.plateau.getIndexNiveauActuel()).getGrille();
 
+      for (int k = g.getLongueur() - 1; k >= 0; k--) {
+         if (g.getCases()[k][j] != null && g.getCases()[k][j].getContent() instanceof Ouvrable)
+            if (g.getCases()[k][j].getContent() instanceof BlocBombe)
+               ((BlocBombe) g.getCases()[k][j].getContent()).open(g, k, j);
+            else if (g.getCases()[k][j].getContent() instanceof Ouvrable)
+               g.viderCase(k, j);
+      }
    }
 }

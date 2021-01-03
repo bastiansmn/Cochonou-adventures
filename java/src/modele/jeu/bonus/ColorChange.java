@@ -3,17 +3,15 @@ package modele.jeu.bonus;
 import modele.jeu.Jeu;
 import modele.jeu.Niveau;
 import modele.jeu.grille.blocs.BlocCouleur;
-import modele.jeu.grille.blocs.Ouvrable;
 
 import java.awt.*;
+import java.util.Random;
 
 public class ColorChange extends Bonus{
 
-   private int nbrRestant;
-
    public ColorChange() {
       super("co");
-      this.nbrRestant = 0;
+      this.nbrRestant = 7;
    }
 
    @Override
@@ -28,44 +26,29 @@ public class ColorChange extends Bonus{
 
          Niveau.Grille g = Jeu.plateau.getNiveaux().get(Jeu.plateau.getIndexNiveauActuel()).getGrille();
 
+         Color[] rand = new Color[] {Color.YELLOW, Color.RED, Color.GREEN, Color.BLUE, Color.PINK};
+
          if (g.getCases()[i][j] != null && g.getCases()[i][j].getContent() instanceof BlocCouleur) {
-            changerCouleur(g, i, j, ((BlocCouleur) g.getCases()[i][j].getContent()).getColor(), true);
+            Color c;
+            do {
+               c = rand[new Random().nextInt(5)];
+            } while (c == ((BlocCouleur) g.getCases()[i][j].getContent()).getColor());
+            changerCouleur(g, i, j, ((BlocCouleur) g.getCases()[i][j].getContent()).getColor(), true, c);
          }
       }
    }
 
-   public void changerCouleur(Niveau.Grille g, int i, int j, Color c, boolean premiereOuverture) {
+   public void changerCouleur(Niveau.Grille g, int i, int j, Color c, boolean premiereOuverture, Color aChanger) {
       try {
          if (g.getCases()[i][j] != null && g.getCases()[i][j].getContent() instanceof BlocCouleur)
-            if (comboPossible(g, i, j, c) || ((BlocCouleur) g.getCases()[i][j].getContent()).getColor() == c && !premiereOuverture) {
-               g.remplirCase(i, j, new BlocCouleur(Color.PINK));
-               changerCouleur(g, i - 1, j, c, false);
-               changerCouleur(g, i, j - 1, c, false);
-               changerCouleur(g, i + 1, j, c, false);
-               changerCouleur(g, i, j + 1, c, false);
+            if (((BlocCouleur) g.getCases()[i][j].getContent()).comboPossible(g, i, j, c) || ((BlocCouleur) g.getCases()[i][j].getContent()).getColor() == c && !premiereOuverture) {
+               g.remplirCase(i, j, new BlocCouleur(aChanger));
+               changerCouleur(g, i - 1, j, c, false, aChanger);
+               changerCouleur(g, i, j - 1, c, false, aChanger);
+               changerCouleur(g, i + 1, j, c, false, aChanger);
+               changerCouleur(g, i, j + 1, c, false, aChanger);
             }
       } catch (ArrayIndexOutOfBoundsException ignored) {}
    }
 
-   public boolean comboPossible(Niveau.Grille g, int i, int j, Color c) {
-      if (g.getCases()[i][j].getContent() instanceof BlocCouleur && ((BlocCouleur) g.getCases()[i][j].getContent()).getColor() == c) {
-         try {
-            if (g.getCases()[i][j + 1] != null && g.getCases()[i][j + 1].getContent() instanceof BlocCouleur && ((BlocCouleur) g.getCases()[i][j + 1].getContent()).getColor() == c)
-               return true;
-         } catch (ArrayIndexOutOfBoundsException ignored) {}
-         try {
-            if (g.getCases()[i][j - 1] != null && g.getCases()[i][j - 1].getContent() instanceof BlocCouleur && ((BlocCouleur) g.getCases()[i][j - 1].getContent()).getColor() == c)
-               return true;
-         } catch (ArrayIndexOutOfBoundsException ignored) {}
-         try {
-            if (g.getCases()[i - 1][j] != null && g.getCases()[i - 1][j].getContent() instanceof BlocCouleur && ((BlocCouleur) g.getCases()[i - 1][j].getContent()).getColor() == c)
-               return true;
-         } catch (ArrayIndexOutOfBoundsException ignored) {}
-         try {
-            if (g.getCases()[i + 1][j] != null && g.getCases()[i + 1][j].getContent() instanceof BlocCouleur && ((BlocCouleur) g.getCases()[i + 1][j].getContent()).getColor() == c)
-               return true;
-         } catch (ArrayIndexOutOfBoundsException ignored) {}
-      }
-      return false;
-   }
 }

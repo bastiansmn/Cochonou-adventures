@@ -2,6 +2,7 @@ package vue.terminal;
 
 import modele.jeu.Jeu;
 import modele.jeu.Niveau;
+import modele.jeu.Plateau;
 import modele.jeu.animaux.Animal;
 import modele.jeu.bonus.Bonus;
 import modele.jeu.grille.blocs.BlocBombe;
@@ -27,13 +28,13 @@ public class Launcher {
       do {
          clear();
          affichageInfoJoueur();
-         Jeu.plateau.afficher();
+         afficherPlateau(Jeu.plateau);
          System.out.println("\n[* = niveau déjà gagné]");
          System.out.println("[? pour afficher les règles]\n\n============================\n\nUtilisez z/s pour changer de niveau, d pour lancer le niveau sélectionné ou entrez le numéro d'un niveau :");
          reponse = new Scanner(System.in).next();
 
          if (reponse.matches("[0-9]+")) {
-            Niveau n = Jeu.plateau.jouerNiveauParNumero(Integer.parseInt(reponse));
+            Niveau n = Jeu.plateau.jouerNiveauParNumero(Integer.parseInt(reponse) - 1);
             if (n != null)
                jouerNiveau(n);
             else
@@ -65,9 +66,6 @@ public class Launcher {
          }
          System.out.println("\n");
          jouerGrille(n.getGrille());
-         if (n.getGrille().gagne())  {
-            n.marquerCommeGagne();
-         }
          clear();
       } else {
          Erreur.afficher("Vous ne pouvez pas jouer ce niveau");
@@ -89,41 +87,56 @@ public class Launcher {
             case 2 -> afficherAideGrille();
             case 3 -> quitter = true;
          }
-      } while (!g.gagne() && !quitter && !g.perdu());
-      if (g.gagne()) {
+      } while (!g.isGagne() && !quitter && !g.isPerdu());
+      if (g.isGagne()) {
          clear();
          System.out.println("""
-            Votre score :   """ + g.getScore() + """
-                        
-            Animaux sauvés :    """ + g.getAnimauxSauvee() + """      
-            
-                  _____                          _\s
-                 / ____|                    //  | |
-                | |  __  __ _  __ _ _ __   ___  | |
-                | | |_ |/ _` |/ _` | '_ \\ / _ \\ | |
-                | |__| | (_| | (_| | | | |  __/ |_|
-                 \\_____|\\__,_|\\__, |_| |_|\\___| (_)
-                               __/ |              \s
-                              |___/               \s
-                              
-              Appuyez sur entrée pour quitter...
-            """);
+               Votre score :   """ + g.getScore() + """
+                           
+               Animaux sauvés :    """ + g.getAnimauxSauvee() + """      
+                           
+                     _____                          _\s
+                    / ____|                    //  | |
+                   | |  __  __ _  __ _ _ __   ___  | |
+                   | | |_ |/ _` |/ _` | '_ \\ / _ \\ | |
+                   | |__| | (_| | (_| | | | |  __/ |_|
+                    \\_____|\\__,_|\\__, |_| |_|\\___| (_)
+                                  __/ |              \s
+                                 |___/               \s
+                                 
+                 Appuyez sur entrée pour quitter...
+               """);
          new Scanner(System.in).nextLine();
-      } else if (g.perdu()) {
+      } else if (g.isPerdu()) {
          System.out.println("""
-                          _____             _         _\s
-                         |  __ \\           | |       | |
-                         | |__) |__ _ __ __| |_   _  | |
-                         |  ___/ _ \\ '__/ _` | | | | | |
-                         | |  |  __/ | | (_| | |_| | |_|
-                         |_|   \\___|_|  \\__,_|\\__,_| (_)
-                                                       \s
-                                                       \s
-                                                       
-                         Appuyez sur entrée pour quitter ...
-                     """);
+                    _____             _         _\s
+                   |  __ \\           | |       | |
+                   | |__) |__ _ __ __| |_   _  | |
+                   |  ___/ _ \\ '__/ _` | | | | | |
+                   | |  |  __/ | | (_| | |_| | |_|
+                   |_|   \\___|_|  \\__,_|\\__,_| (_)
+                                                 \s
+                                                 \s
+                                                 
+                   Appuyez sur entrée pour quitter ...
+               """);
          new Scanner(System.in).nextLine();
       }
+   }
+
+   public void afficherPlateau(Plateau p) {
+      for (int i = 0; i < p.getNiveaux().size(); i++) {
+         if (i == p.getIndexNiveauActuel()) {
+            System.out.print(" -> ");
+         } else {
+            System.out.print("    ");
+         }
+         afficherNiveau(p.getNiveaux().get(i));
+      }
+   }
+
+   public void afficherNiveau(Niveau n) {
+      System.out.println("Niveau {" + (n.getNumNiveau()+1) + "}" + (n.getGrille().isGagne() ? " *" : ""));
    }
 
    public void afficherGrille(Niveau.Grille g) {
@@ -168,8 +181,8 @@ public class Launcher {
       int option = -1;
       do {
          System.out.println("[? pour afficher l'aide]\nQue voulez vous jouer ?");
-         s = sc.next();
-         if (s.matches("[A-Z][0-9]+")) {
+         s = sc.nextLine();
+         if (s.matches("^([A-Z][0-9]+)")) {
             option = 0; // Une case à détruire.
          } else if (s.matches("[a-z][a-z] [A-Z][0-9]+")) {
             option = 1; // Ouvrir un bonus.
@@ -247,22 +260,22 @@ public class Launcher {
    public void reglesDuJeu() {
       clear();
       System.out.println("""
-           But du jeu :
-               - Dans chaques niveau, sauvez tous les animaux.
-               - Cassez les blocs pour les faire descendre jusqu'en bas.
-               - Utilisez vos bonus lorsque vous êtes coincés. 
-               
-           Comment jouer :
-               - Cliquez ou entrez la position du bloc que vous souhaitez casser, ses blocs adjacents de même
-           couleur seront détruits aussi.
-               - Chaque animal est représenté par une lettre différente :
-                  * Chat : c
-                  * Chien : C
-                  * Oiseau : o
-                  * Panda : p
-                  
-           Appuyez sur entrée pour quitter...
-            """);
+            But du jeu :
+                - Dans chaques niveau, sauvez tous les animaux.
+                - Cassez les blocs pour les faire descendre jusqu'en bas.
+                - Utilisez vos bonus lorsque vous êtes coincés. 
+                
+            Comment jouer :
+                - Cliquez ou entrez la position du bloc que vous souhaitez casser, ses blocs adjacents de même
+            couleur seront détruits aussi.
+                - Chaque animal est représenté par une lettre différente :
+                   * Chat : c
+                   * Chien : C
+                   * Oiseau : o
+                   * Panda : p
+                   
+            Appuyez sur entrée pour quitter...
+             """);
       new Scanner(System.in).nextLine();
    }
 }

@@ -5,6 +5,7 @@ import java.io.Serializable;
 public abstract class Bonus implements Serializable {
 
    private final String init;
+   protected int nbrRestant;
 
    protected Bonus(String init) {
       this.init = init;

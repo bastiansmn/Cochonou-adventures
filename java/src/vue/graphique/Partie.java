@@ -83,7 +83,7 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
         updateGrille.fill = GridBagConstraints.HORIZONTAL;
         this.removeAll();
         grille.actionOuvertureGrille(updateGrille.gridy, updateGrille.gridx);
-        if(grille.gagne()) {
+        if(grille.isGagne()) {
             Icon img = new ImageIcon("gagne.png");
             JLabel victoire = new JLabel();
             victoire.setIcon(img);

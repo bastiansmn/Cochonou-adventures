@@ -17,15 +17,12 @@ import java.io.Serializable;
 
 public class Niveau implements Serializable {
 
-   private int numNiveau;
-
+   private final int numNiveau;
    private static int nbrNiveau = 0;
-
    private boolean isGagne = false;
+   private boolean isPerdu = false;
    private boolean canPlay;
-
-   private Grille grille;
-
+   private Niveau.Grille grille;
 
    public Niveau(Niveau.Grille g, boolean canPlay) {
       this.numNiveau = nbrNiveau;
@@ -35,24 +32,13 @@ public class Niveau implements Serializable {
    }
 
    public Niveau() {
-
+      numNiveau = nbrNiveau;
    }
 
-   public void afficher() {
-      System.out.println("Niveau {" + numNiveau + "}" + (isGagne ? " *" : ""));
-   }
-
-   public void marquerCommeGagne() {
-      isGagne = true;
-      Jeu.plateau.goToNextLevel();
-      if (numNiveau + 1 < Jeu.plateau.getNiveaux().size()) {
-         Jeu.plateau.getNiveaux().get(numNiveau + 1).setGagne();
-      }
-   }
 
    public class Grille implements Serializable {
-      private Container[][] cases;
 
+      private Container[][] cases;
       private int largeur, longueur;
       private String fileName;
       private String separator;
@@ -60,29 +46,18 @@ public class Niveau implements Serializable {
       private int animauxSauvee = 0;
       private int animauxRestants;
       private int nombreLimiteDeCoup;
-      private boolean perdu = false;
 
       public void actionOuvertureGrille(int i, int j) {
-         if (perdu)
-            perdu = false;
          if (i >= 0 && i < cases.length && j >= 0 && j < cases[i].length) {
             if (cases[i][j] != null && cases[i][j].getContent() instanceof Ouvrable) {
                this.score += (int) (1000 * Math.pow(((Ouvrable) cases[i][j].getContent()).open(this, i, j), 2));
-               nettoyerGrille();
-               nombreLimiteDeCoup--;
-               if (nombreLimiteDeCoup == 0) {
-                  perdu = true;
-                  Jeu.joueur.perdreUneVie();
-                  try {
-                     grille = CSVImport.getCSV(fileName, separator);
-                  } catch (CSVNotValidException ignored) {}
-               }
-               try(FileOutputStream fos = new FileOutputStream("ser/jeu.ser");
-                   ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-                  oos.writeObject(Jeu.plateau);
-                  oos.writeObject(Jeu.joueur);
-               } catch (IOException ignored) {
-
+               apresCoup();
+               if (Jeu.serialisation) {
+                  try(FileOutputStream fos = new FileOutputStream("ser/jeu.ser");
+                      ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+                     oos.writeObject(Jeu.plateau);
+                     oos.writeObject(Jeu.joueur);
+                  } catch (IOException ignored) {}
                }
             }
          }
@@ -92,8 +67,18 @@ public class Niveau implements Serializable {
          for (Bonus bonusInitiales : Jeu.joueur.bonus)
             if (s.equals(bonusInitiales.getInit())) {
                bonusInitiales.utiliser(i, j);
+               apresCoup();
                return;
             }
+      }
+
+      public void apresCoup() {
+         nettoyerGrille();
+         nombreLimiteDeCoup--;
+         if (isPerdu())
+            perdre();
+         if (isGagne())
+            gagner();
       }
 
       public void nettoyerGrille() {
@@ -110,29 +95,30 @@ public class Niveau implements Serializable {
                   }
                   k++;
                }
+               /*
+               try {
+                  if (cases[k-1][i] != null && cases[k-1][i].getContent() instanceof Deplacable && cases[k][i-1] != null && cases[k][i-1].getContent() == null && cases[k-1][i-1] != null && cases[k-1][i-1].getContent() == null) {
+                     cases[k][i-1] = cases[k-1][i];
+                     cases[k-1][i] = new Case(null);
+                  }
+               } catch (ArrayIndexOutOfBoundsException ignored) {}
+               try {
+                  if (cases[k-1][i] != null && cases[k-1][i].getContent() instanceof Deplacable && cases[k][i+1] != null && cases[k][i+1].getContent() == null && cases[k-1][i+1] != null && cases[k-1][i+1].getContent() == null) {
+                     cases[k][i+1] = cases[k-1][i];
+                     cases[k-1][i] = new Case(null);
+                  }
+               } catch (ArrayIndexOutOfBoundsException ignored) {}
+                */
             }
          }
       }
 
-      public boolean gagne() {
-         if (animauxSauvee == animauxRestants) {
-            Jeu.joueur.gagner(this.score);
-            marquerCommeGagne();
-            return true;
-         }
-         return false;
+      public boolean isPerdu() {
+         return nombreLimiteDeCoup == 0;
       }
 
-      public boolean perdu() {
-         if (nombreLimiteDeCoup == 0) {
-            perdu = true;
-            Jeu.joueur.perdreUneVie();
-            try {
-               grille = CSVImport.getCSV(fileName, separator);
-            } catch (CSVNotValidException ignored) {}
-            return true;
-         }
-         return false;
+      public boolean isGagne() {
+         return animauxSauvee == animauxRestants;
       }
 
       public void compteAnimaux() {
@@ -166,14 +152,6 @@ public class Niveau implements Serializable {
          return longueur;
       }
 
-      public void setAnimauxRestants(int animauxRestants) {
-         this.animauxRestants = animauxRestants;
-      }
-
-      public void setAnimauxSauvee(int animauxSauvee) {
-         this.animauxSauvee = animauxSauvee;
-      }
-
       public void setCases(Container[][] cases) {
          this.cases = cases;
       }
@@ -194,20 +172,12 @@ public class Niveau implements Serializable {
          this.nombreLimiteDeCoup = nombreLimiteDeCoup;
       }
 
-      public void setScore(int score) {
-         this.score = score;
-      }
-
       public void setSeparator(String separator) {
          this.separator = separator;
       }
 
       public Container[][] getCases() {
          return cases;
-      }
-
-      public boolean isPerdu() {
-         return perdu;
       }
 
       public void viderCase(int i, int j) {
@@ -219,8 +189,33 @@ public class Niveau implements Serializable {
       }
    }
 
-   public void setGagne() {
+   public void gagner() {
+      if (grille.isGagne()) {
+         Jeu.joueur.gagner(grille.score);
+         isGagne = true;
+         Jeu.plateau.goToNextLevel();
+         if (numNiveau + 1 < Jeu.plateau.getNiveaux().size()) {
+            Jeu.plateau.getNiveaux().get(numNiveau + 1).setJouable();
+         }
+      }
+   }
+
+   public void perdre() {
+      if (isPerdu) {
+         Jeu.joueur.perdreUneVie();
+         try {
+            grille = CSVImport.getCSV(grille.fileName, grille.separator);
+         } catch (CSVNotValidException ignored) {}
+         isPerdu = true;
+      }
+   }
+
+   public void setJouable() {
       canPlay = true;
+   }
+
+   public void setGrille(Grille grille) {
+      this.grille = grille;
    }
 
    public boolean canPlay() {
@@ -233,9 +228,5 @@ public class Niveau implements Serializable {
 
    public Grille getGrille() {
       return grille;
-   }
-
-   public boolean isGagne() {
-      return isGagne;
    }
 }

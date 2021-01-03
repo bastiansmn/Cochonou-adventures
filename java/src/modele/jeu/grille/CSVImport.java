@@ -120,6 +120,8 @@ public class CSVImport extends CSVObject {
       res.setLongueur(csv.getCases().length);
       res.setLargeur(csv.getCases()[0].length);
 
+      n.setGrille(res);
+
       return res;
    }
 
