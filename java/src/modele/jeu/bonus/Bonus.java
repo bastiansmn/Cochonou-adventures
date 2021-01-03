@@ -16,8 +16,7 @@ public abstract class Bonus implements Serializable {
 
    public abstract int getNombreRestant();
 
-   // TODO : Implementer les bonus pour leur donner des actions.
-   public abstract void utiliser();
+   public abstract void utiliser(int i, int j);
 
    public String getInit() {
       return init;

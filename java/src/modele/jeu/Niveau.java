@@ -4,6 +4,7 @@ import modele.jeu.animaux.Animal;
 import modele.jeu.bonus.Bonus;
 import modele.jeu.grille.CSVImport;
 import modele.jeu.grille.Case;
+import modele.jeu.grille.CaseType;
 import modele.jeu.grille.Container;
 import modele.jeu.grille.blocs.Deplacable;
 import modele.jeu.grille.blocs.Ouvrable;
@@ -87,10 +88,10 @@ public class Niveau implements Serializable {
          }
       }
 
-      public void actionBonus(String s) {
+      public void actionBonus(String s, int i, int j) {
          for (Bonus bonusInitiales : Jeu.joueur.bonus)
             if (s.equals(bonusInitiales.getInit())) {
-               bonusInitiales.utiliser();
+               bonusInitiales.utiliser(i, j);
                return;
             }
       }
@@ -210,7 +211,11 @@ public class Niveau implements Serializable {
       }
 
       public void viderCase(int i, int j) {
-         this.cases[i][j] = new Case(null);
+         remplirCase(i, j, null);
+      }
+
+      public void remplirCase(int i, int j, CaseType c) {
+         this.cases[i][j] = new Case(c);
       }
    }
 

@@ -85,7 +85,7 @@ public class Launcher {
 
          switch (Integer.parseInt(option[0])) {
             case 0 -> g.actionOuvertureGrille(Integer.parseInt(option[1].substring(1)) - 1, option[1].toUpperCase().charAt(0) - 65);
-            case 1 -> g.actionBonus(option[1]);
+            case 1 -> g.actionBonus(option[1].substring(0, 2), Integer.parseInt(option[1].substring(4)) - 1, option[1].toUpperCase().charAt(3) - 65);
             case 2 -> afficherAideGrille();
             case 3 -> quitter = true;
          }
@@ -171,7 +171,7 @@ public class Launcher {
          s = sc.next();
          if (s.matches("[A-Z][0-9]+")) {
             option = 0; // Une case à détruire.
-         } else if (s.matches("[a-z][a-z]")) {
+         } else if (s.matches("[a-z][a-z] [A-Z][0-9]+")) {
             option = 1; // Ouvrir un bonus.
          } else if (s.equals("?")) {
             option = 2; // Ouvrir l'aide

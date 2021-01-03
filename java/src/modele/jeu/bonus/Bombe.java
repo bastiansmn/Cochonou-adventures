@@ -17,7 +17,7 @@ public class Bombe extends Bonus {
    }
 
    @Override
-   public void utiliser() {
+   public void utiliser(int i, int j) {
       if (nbrRestant > 0)
          nbrRestant--;
 
