@@ -1,6 +1,8 @@
 package modele.jeu.grille;
 
-public class Container {
+import java.io.Serializable;
+
+public class Container implements Serializable {
    private CaseType content;
 
    public Container(CaseType c) {

@@ -14,12 +14,12 @@ import java.awt.event.ActionListener;
 
 public class Partie extends vue.graphique.ImagePanel implements ActionListener {
     Fenetre fenetre;
-    Grille grille;
+    modele.jeu.Niveau.Grille grille;
     JButton[] boutons;
     int index = 0;
     GridBagLayout gl = new GridBagLayout();
 
-    public Partie(Fenetre f, Grille g) {
+    public Partie(Fenetre f, modele.jeu.Niveau.Grille g) {
         super(new ImageIcon("niveaux.jpg").getImage());
         this.fenetre = f;
         this.grille = g;
@@ -29,7 +29,7 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
         Afficher(g);
     }
 
-    public void Afficher(Grille g) {
+    public void Afficher(modele.jeu.Niveau.Grille g) {
         GridBagConstraints niveau = new GridBagConstraints();
         niveau.fill = GridBagConstraints.HORIZONTAL;
         for (int i = 0; i < g.getLongueur(); i++) {

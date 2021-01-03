@@ -1,6 +1,8 @@
 package modele.jeu.bonus;
 
-public abstract class Bonus {
+import java.io.Serializable;
+
+public abstract class Bonus implements Serializable {
 
    private final String init;
 

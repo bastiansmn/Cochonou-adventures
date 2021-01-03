@@ -2,13 +2,15 @@ package modele.outils;
 
 import modele.jeu.bonus.Bonus;
 
-public class Joueur {
+import java.io.Serializable;
+
+public class Joueur implements Serializable {
 
    private final String nom;
    private int vie;
    private int score;
 
-   public static final Bonus[] bonus = new Bonus[5];
+   public Bonus[] bonus = new Bonus[5];
 
 
    public Joueur(String nom) {
@@ -17,13 +19,18 @@ public class Joueur {
       this.score = 0;
    }
 
+   @Override
+   public String toString() {
+      return "Joueur{" +
+            "nom='" + nom + '\'' +
+            ", vie=" + vie +
+            ", score=" + score +
+            '}';
+   }
 
-   public boolean perdreUneVie() {
-      if (plusDeVie()) {
-         return false;
-      }
-      this.vie--;
-      return true;
+   public void perdreUneVie() {
+      if (!plusDeVie())
+         this.vie--;
    }
 
    public void gagner(int n) {

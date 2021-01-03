@@ -1,6 +1,6 @@
 package modele.jeu.grille.blocs;
 
-import modele.jeu.grille.Grille;
+import modele.jeu.Niveau;
 
 import java.awt.*;
 
@@ -47,7 +47,7 @@ public class BlocCouleur extends Bloc implements Deplacable, Ouvrable {
       System.out.print(termColor + "██" + ANSI_RESET);
    }
 
-   public boolean comboPossible(Grille g, int i, int j, Color c) {
+   public boolean comboPossible(Niveau.Grille g, int i, int j, Color c) {
       if (g.getCases()[i][j].getContent() instanceof BlocCouleur && ((BlocCouleur) g.getCases()[i][j].getContent()).getColor() == c) {
          try {
             if (g.getCases()[i][j + 1] != null && g.getCases()[i][j + 1].getContent() instanceof BlocCouleur && ((BlocCouleur) g.getCases()[i][j + 1].getContent()).getColor() == c)
@@ -69,7 +69,7 @@ public class BlocCouleur extends Bloc implements Deplacable, Ouvrable {
       return false;
    }
 
-   public int ouvrirCase(Grille g, int i, int j, Color c, boolean premiereOuverture) {
+   public int ouvrirCase(Niveau.Grille g, int i, int j, Color c, boolean premiereOuverture) {
       int summ = 0;
       try {
          if (g.getCases()[i][j] != null && g.getCases()[i][j].getContent() instanceof BlocCouleur)
@@ -86,7 +86,7 @@ public class BlocCouleur extends Bloc implements Deplacable, Ouvrable {
    }
 
    @Override
-   public int open(Grille g, int i, int j) {
+   public int open(Niveau.Grille g, int i, int j) {
       return ouvrirCase(g, i, j, this.getColor(), true);
    }
 }

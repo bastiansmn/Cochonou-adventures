@@ -4,11 +4,9 @@ import modele.jeu.Jeu;
 import modele.jeu.Niveau;
 import modele.jeu.animaux.Animal;
 import modele.jeu.bonus.Bonus;
-import modele.jeu.grille.Grille;
 import modele.jeu.grille.blocs.BlocBombe;
 import modele.jeu.grille.blocs.BlocCouleur;
 import modele.jeu.grille.blocs.BlocObstacle;
-import modele.outils.Joueur;
 import modele.outils.erreurs.Erreur;
 
 import java.util.Arrays;
@@ -76,7 +74,7 @@ public class Launcher {
       }
    }
 
-   public void jouerGrille(Grille g) {
+   public void jouerGrille(Niveau.Grille g) {
       boolean quitter = false;
       do {
          clear();
@@ -128,13 +126,13 @@ public class Launcher {
       }
    }
 
-   public void afficherGrille(Grille g) {
+   public void afficherGrille(Niveau.Grille g) {
       System.out.println("┌───────────────────┐\n" +
             "│  Score : " + "0".repeat(7 - Integer.toString(g.getScore()).length()) + g.getScore() + "  │\n" +
             "│  Animaux :  " + g.getAnimauxSauvee() + '/' + g.getAnimauxRestants() + "   │\n" +
             "│  Coups rest. : " + g.getNombreLimiteDeCoup() + " ".repeat(Math.abs(Integer.toString(g.getNombreLimiteDeCoup()).length() - 2)) + " │\n" +
             "│  Bonus :          │\n" +
-            "│  " + Arrays.toString(Joueur.bonus).replace("[", "").replace("]", "").replace(",", "").replaceAll("null", "--") + "   │\n" +
+            "│  " + Arrays.toString(Jeu.joueur.bonus).replace("[", "").replace("]", "").replace(",", "").replaceAll("null", "--") + "   │\n" +
             "│  " + afficherNbrBonus() + "  │\n" +
             "└───────────────────┘\n");
       System.out.print("    ");
@@ -200,7 +198,7 @@ public class Launcher {
 
    private String afficherNbrBonus() {
       StringBuilder s = new StringBuilder();
-      for (Bonus b : Joueur.bonus) {
+      for (Bonus b : Jeu.joueur.bonus) {
          s.append("(").append(b.getNombreRestant()).append(")");
       }
       return s.toString();

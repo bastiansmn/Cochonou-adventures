@@ -1,5 +1,7 @@
 package modele.jeu.grille;
 
-public class CaseType {
+import java.io.Serializable;
+
+public class CaseType implements Serializable {
 
 }

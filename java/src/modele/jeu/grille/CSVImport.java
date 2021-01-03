@@ -1,5 +1,6 @@
 package modele.jeu.grille;
 
+import modele.jeu.Niveau;
 import modele.jeu.animaux.*;
 import modele.jeu.grille.blocs.BlocBombe;
 import modele.jeu.grille.blocs.BlocCouleur;
@@ -8,13 +9,15 @@ import modele.outils.csv.CSVObject;
 import modele.outils.erreurs.CSVNotValidException;
 
 import java.awt.*;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 
 public class CSVImport extends CSVObject {
 
    private Container[][] cases;
 
    public CSVImport(String fileName) {
-      this(fileName, ",");
+      super(fileName, ",");
    }
 
    public CSVImport(String fileName, String separator) {
@@ -65,6 +68,59 @@ public class CSVImport extends CSVObject {
             }
          }
       }
+   }
+
+
+   public void exportToCSV(Niveau.Grille g) throws FileNotFoundException {
+      PrintWriter printWriter = new PrintWriter("myNewLevel.csv");
+
+      for (int i = 0; i < g.getLongueur(); i++) {
+         for (int j = 0; j < g.getLargeur(); j++) {
+            if (g.getCases()[i][j] == null) {
+               printWriter.write("null" + ((j == g.getLargeur() - 1) ? "" : ";"));
+            } else if (g.getCases()[i][j].getContent() == null) {
+               printWriter.write("" + ((j == g.getLargeur() - 1) ? "" : ";"));
+            } else if (g.getCases()[i][j].getContent() instanceof Chat) {
+               printWriter.write("chat" + ((j == g.getLargeur() - 1) ? "" : ";"));
+            } else if (g.getCases()[i][j].getContent() instanceof Chien) {
+               printWriter.write("chien" + ((j == g.getLargeur() - 1) ? "" : ";"));
+            } else if (g.getCases()[i][j].getContent() instanceof Panda) {
+               printWriter.write("panda" + ((j == g.getLargeur() - 1) ? "" : ";"));
+            } else if (g.getCases()[i][j].getContent() instanceof Oiseau) {
+               printWriter.write("oiseau" + ((j == g.getLargeur() - 1) ? "" : ";"));
+            } else if (g.getCases()[i][j].getContent() instanceof BlocCouleur) {
+               printWriter.write(((BlocCouleur) g.getCases()[i][j].getContent()).getColorName() + ((j == g.getLargeur() - 1) ? "" : ";"));
+            } else if (g.getCases()[i][j].getContent() instanceof BlocObstacle) {
+               printWriter.write("obstacle" + ((j == g.getLargeur() - 1) ? "" : ";"));
+            } else if (g.getCases()[i][j].getContent() instanceof BlocBombe) {
+               printWriter.write("bombe" + ((j == g.getLargeur() - 1) ? "" : ";"));
+            }
+         }
+         printWriter.write("\n");
+      }
+
+      printWriter.close();
+   }
+
+   public Niveau.Grille getCSV(String fileName) throws CSVNotValidException {
+      return getCSV(fileName, ",");
+   }
+
+   public static Niveau.Grille getCSV(String fileName, String separator) throws CSVNotValidException {
+      CSVImport csv = new CSVImport(fileName, separator);
+      Niveau n = new Niveau();
+      Niveau.Grille res = n.new Grille();
+
+      res.setFileName(fileName);
+      res.setSeparator(separator);
+      res.setCases(csv.getCases());
+      res.setNombreLimiteDeCoup(csv.getMaxMoves());
+      res.compteAnimaux();
+
+      res.setLongueur(csv.getCases().length);
+      res.setLargeur(csv.getCases()[0].length);
+
+      return res;
    }
 
    public Container[][] getCases() {

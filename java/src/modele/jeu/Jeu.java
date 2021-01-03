@@ -3,10 +3,13 @@ package modele.jeu;
 import modele.jeu.bonus.Bombe;
 import modele.jeu.bonus.ColorChange;
 import modele.jeu.bonus.Firework;
-import modele.jeu.grille.Grille;
+import modele.jeu.grille.CSVImport;
 import modele.outils.Joueur;
 import modele.outils.erreurs.CSVNotValidException;
+
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 
 
 public class Jeu {
@@ -22,24 +25,22 @@ public class Jeu {
    }
 
    public int run() throws InvocationTargetException, InterruptedException {
-      // TODO : Initialisation du plateau. (si partie existante, charger et commencer depuis la partie en question, sinon créer nvelle)
-      
-      // Test pour ajouter des niveaux (à enlever plus tard) et ajouter les bonus du joueur:
-      Joueur.bonus[0] = new Firework();
-      Joueur.bonus[1] = new ColorChange();
-      Joueur.bonus[2] = new Bombe();
-      Joueur.bonus[3] = new Bombe();
-      Joueur.bonus[4] = new ColorChange();
+      File serialJoueur = new File("ser/jeu.ser");
 
-      try {
-         plateau.ajouterNiveau(new Niveau(1, new Grille().getCSV("niveaux/nv1.csv", ";"), true));
-         plateau.ajouterNiveau(new Niveau(2, new Grille().getCSV("niveaux/nv2.csv", ";"), false));
-         plateau.ajouterNiveau(new Niveau(3, new Grille().getCSV("niveaux/nv3.csv", ";"), false));
-         plateau.ajouterNiveau(new Niveau(4, new Grille().getCSV("niveaux/nv4.csv", ";"), false));
-      } catch (CSVNotValidException e) {
-         e.printStackTrace();
+      if (serialJoueur.exists()) {
+         try (FileInputStream fis = new FileInputStream("ser/jeu.ser");
+              ObjectInputStream ois = new ObjectInputStream(fis)) {
+            plateau = (Plateau) ois.readObject();
+            joueur = (Joueur) ois.readObject();
+         } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+            initJoueur();
+            initPlateau();
+         }
+      } else {
+         initJoueur();
+         initPlateau();
       }
-
 
       if ((type.equals("-g") || joueur.getNom().equals("--graphical"))) {
          return new vue.graphique.Launcher().runGraphical();
@@ -48,5 +49,25 @@ public class Jeu {
       }
       vue.terminal.Launcher.displayHelp();
       return 1;
+   }
+
+
+   private void initJoueur() {
+      Jeu.joueur.bonus[0] = new Firework();
+      Jeu.joueur.bonus[1] = new ColorChange();
+      Jeu.joueur.bonus[2] = new Bombe();
+      Jeu.joueur.bonus[3] = new Firework();
+      Jeu.joueur.bonus[4] = new ColorChange();
+   }
+
+   private void initPlateau() {
+      try {
+         File[] list = new File("niveaux").listFiles();
+         for (int i = 0; i < Objects.requireNonNull(list).length; i++) {
+            plateau.ajouterNiveau(new Niveau(CSVImport.getCSV("niveaux/nv"+(i+1)+".csv", ";"), i == 0));
+         }
+      } catch (CSVNotValidException error) {
+         error.printStackTrace();
+      }
    }
 }

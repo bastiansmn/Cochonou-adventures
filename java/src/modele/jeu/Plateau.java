@@ -2,9 +2,10 @@ package modele.jeu;
 
 import modele.outils.erreurs.Erreur;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
-public class Plateau {
+public class Plateau implements Serializable {
 
    private final LinkedList<Niveau> niveaux;
    private int indexNiveauActuel = 0;
@@ -27,6 +28,14 @@ public class Plateau {
          }
          niveaux.get(i).afficher();
       }
+   }
+
+   @Override
+   public String toString() {
+      return "Plateau{" +
+            "niveaux=" + niveaux +
+            ", indexNiveauActuel=" + indexNiveauActuel +
+            '}';
    }
 
    public Niveau jouerNiveauParNumero(int num) {
