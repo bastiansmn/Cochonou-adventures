@@ -105,7 +105,7 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
             fenetre.cl.show(fenetre.general, "Partie");
             fenetre.validate();
         }
-        if(grille.gagne()) {
+        if(grille.isGagne()) {
             this.setLayout(null);
             Icon img = new ImageIcon("gagne.png");
             JLabel victoire = new JLabel();
@@ -130,7 +130,7 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
             this.add(recommencer, updateGrille);
             this.repaint();
             this.validate();
-        } else if (grille.perdu()) {
+        } else if (grille.isPerdu()) {
             this.setLayout(null);
             Icon img = new ImageIcon("perte.png");
             JLabel perte = new JLabel();

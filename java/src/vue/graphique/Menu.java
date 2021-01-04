@@ -34,7 +34,7 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
         Niveau(int i, int x, int y) {
             niveau = i + 1;
             etiquettes[index] = new JLabel("  NIVEAU " + niveau);
-            if(Jeu.plateau.getNiveaux().get(i).isGagne()) {
+            if(Jeu.plateau.getNiveaux().get(i).getGrille().isGagne()) {
                 etiquettes[index].setForeground(new Color(0, 0, 0));
                 this.setBackground(new Color(243, 202, 32));
             } else {

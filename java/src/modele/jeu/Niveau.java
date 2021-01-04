@@ -21,7 +21,7 @@ public class Niveau implements Serializable {
    private static int nbrNiveau = 0;
    private boolean isGagne = false;
    private boolean isPerdu = false;
-   private boolean canPlay;
+   private boolean canPlay = false;
    private Niveau.Grille grille;
 
    public Niveau(Niveau.Grille g, boolean canPlay) {
