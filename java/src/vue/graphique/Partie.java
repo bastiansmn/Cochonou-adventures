@@ -1,5 +1,6 @@
 package vue.graphique;
 
+import modele.jeu.Jeu;
 import modele.jeu.Niveau;
 import modele.jeu.animaux.*;
 import modele.jeu.grille.blocs.BlocBombe;
@@ -16,10 +17,11 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
     Fenetre fenetre;
     modele.jeu.Niveau.Grille grille;
     JButton[] boutons;
+    JButton continuer, recommencer;
     int index = 0;
     GridBagLayout gl = new GridBagLayout();
 
-    public Partie(Fenetre f, modele.jeu.Niveau.Grille g) {
+    public Partie(Fenetre f, Niveau.Grille g) {
         super(new ImageIcon("niveaux.jpg").getImage());
         this.fenetre = f;
         this.grille = g;
@@ -30,6 +32,8 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
     }
 
     public void Afficher(modele.jeu.Niveau.Grille g) {
+        JLabel score = new JLabel("Score : " + Jeu.joueur.getScore());
+        this.add(score);
         GridBagConstraints niveau = new GridBagConstraints();
         niveau.fill = GridBagConstraints.HORIZONTAL;
         for (int i = 0; i < g.getLongueur(); i++) {
@@ -51,6 +55,8 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
                             boutons[index].setIcon(new ImageIcon("case-cochon.jpg"));
                         } else if (g.getCases()[i][j].getContent() instanceof Panda) {
                             boutons[index].setIcon(new ImageIcon("case-panda.jpg"));
+                        } else if (g.getCases()[i][j].getContent() instanceof Oiseau) {
+                            boutons[index].setIcon(new ImageIcon("case-oiseau.jpg"));
                         }
                     } else if (g.getCases()[i][j].getContent() instanceof BlocCouleur) {
                         if (((BlocCouleur) g.getCases()[i][j].getContent()).getColor().equals(Color.GREEN)) {
@@ -79,34 +85,78 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        GridBagConstraints updateGrille = gl.getConstraints((Component) e.getSource());
+        Object source = e.getSource();
+        GridBagConstraints updateGrille = gl.getConstraints((Component) source);
         updateGrille.fill = GridBagConstraints.HORIZONTAL;
         this.removeAll();
         grille.actionOuvertureGrille(updateGrille.gridy, updateGrille.gridx);
-        if(grille.isGagne()) {
+        if (source == continuer) {
+            fenetre.remove(fenetre.menu);
+            fenetre.menu = new Menu(fenetre, Jeu.plateau.getIndexNiveauActuel(), Jeu.plateau.getNiveaux().size());
+            fenetre.cl.show(fenetre.general, "Menu");
+            this.validate();
+            this.repaint();
+        } else if (source == recommencer) {
+            this.removeAll();
+            fenetre.remove(this);
+            modele.jeu.Niveau.Grille g = Jeu.plateau.getNiveaux().get(Jeu.plateau.getIndexNiveauActuel()).getGrille();
+            JPanel partie = new vue.graphique.Partie(fenetre, g);
+            fenetre.general.add(partie, "Partie");
+            fenetre.cl.show(fenetre.general, "Partie");
+            fenetre.validate();
+        }
+        if(grille.gagne()) {
+            this.setLayout(null);
             Icon img = new ImageIcon("gagne.png");
             JLabel victoire = new JLabel();
             victoire.setIcon(img);
+            victoire.setBounds(200,-175,1000,1000);
             this.add(victoire);
             updateGrille.gridx = 10;
             updateGrille.gridy = 50;
-            JButton continuer = new JButton("Continuer");
-            continuer.setBounds(10,750,100,40);
+            continuer = new JButton("Menu principal");
+            continuer.setBounds(300,500,100,40);
             continuer.setBackground(new Color(0, 0, 0));
             continuer.setForeground(new Color(255,255,255));
             continuer.addActionListener(this);
             this.add(continuer, updateGrille);
             updateGrille.gridx = 30;
             updateGrille.gridy = 300;
-            JButton recommencer = new JButton("Recommencer");
-            recommencer.setBounds(300,400,100,40);
+            recommencer = new JButton("Recommencer");
+            recommencer.setBounds(550,500,150,40);
             recommencer.setBackground(new Color(0, 0, 0));
             recommencer.setForeground(new Color(255,255,255));
             recommencer.addActionListener(this);
             this.add(recommencer, updateGrille);
             this.repaint();
             this.validate();
-        } else {
+        } else if (grille.perdu()) {
+            this.setLayout(null);
+            Icon img = new ImageIcon("perte.png");
+            JLabel perte = new JLabel();
+            perte.setIcon(img);
+            perte.setBounds(200,-175,1000,1000);
+            this.add(perte);
+            updateGrille.gridx = 10;
+            updateGrille.gridy = 50;
+            continuer = new JButton("Menu principal");
+            continuer.setBounds(300,500,100,40);
+            continuer.setBackground(new Color(0, 0, 0));
+            continuer.setForeground(new Color(255,255,255));
+            continuer.addActionListener(this);
+            this.add(continuer, updateGrille);
+            updateGrille.gridx = 30;
+            updateGrille.gridy = 300;
+            recommencer = new JButton("Recommencer");
+            recommencer.setBounds(550,500,150,40);
+            recommencer.setBackground(new Color(0, 0, 0));
+            recommencer.setForeground(new Color(255,255,255));
+            recommencer.addActionListener(this);
+            this.add(recommencer, updateGrille);
+            this.repaint();
+            this.validate();
+        }
+        else {
             this.repaint();
             this.Afficher(grille);
             this.validate();

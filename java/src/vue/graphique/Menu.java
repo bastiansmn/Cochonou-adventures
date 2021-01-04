@@ -1,7 +1,7 @@
 package vue.graphique;
 
+import modele.jeu.Jeu;
 import modele.jeu.Niveau;
-import modele.jeu.grille.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,14 +33,15 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
 
         Niveau(int i, int x, int y) {
             niveau = i + 1;
-            etiquettes[index] = new JLabel("NIVEAU " + niveau);
-            if (i % 10 == 4) {
-                etiquettes[index].setForeground(new Color(50, 13, 62));
+            etiquettes[index] = new JLabel("  NIVEAU " + niveau);
+            if(Jeu.plateau.getNiveaux().get(i).isGagne()) {
+                etiquettes[index].setForeground(new Color(0, 0, 0));
+                this.setBackground(new Color(243, 202, 32));
             } else {
                 etiquettes[index].setForeground(new Color(243, 202, 32));
+                this.setBackground(new Color(0, 0, 0));
             }
             this.setBounds(x, y, 100, 40);
-            this.setBackground(new Color(217, 2, 238, 200));
             this.add(etiquettes[index]);
             index++;
         }
