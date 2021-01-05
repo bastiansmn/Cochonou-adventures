@@ -7,7 +7,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import modele.jeu.Jeu;
-
 public class Fenetre extends JFrame {
     CardLayout cl;
     JPanel general = new JPanel();
