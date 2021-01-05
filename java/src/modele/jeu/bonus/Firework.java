@@ -1,7 +1,7 @@
 package modele.jeu.bonus;
 
 import modele.jeu.Jeu;
-import modele.jeu.Niveau;
+import modele.jeu.grille.Grille;
 import modele.jeu.grille.blocs.BlocBombe;
 import modele.jeu.grille.blocs.Ouvrable;
 
@@ -19,17 +19,18 @@ public class Firework extends Bonus {
 
    @Override
    public void utiliser(int i, int j) {
-      if (nbrRestant > 0)
+      if (nbrRestant > 0) {
+         Grille g = Jeu.plateau.getNiveaux().get(Jeu.plateau.getIndexNiveauActuel()).getGrille();
          nbrRestant--;
-
-      Niveau.Grille g = Jeu.plateau.getNiveaux().get(Jeu.plateau.getIndexNiveauActuel()).getGrille();
-
-      for (int k = g.getLongueur() - 1; k >= 0; k--) {
-         if (g.getCases()[k][j] != null && g.getCases()[k][j].getContent() instanceof Ouvrable)
-            if (g.getCases()[k][j].getContent() instanceof BlocBombe)
-               ((BlocBombe) g.getCases()[k][j].getContent()).open(g, k, j);
-            else if (g.getCases()[k][j].getContent() instanceof Ouvrable)
-               g.viderCase(k, j);
+         for (int k = g.getLongueur() - 1; k >= 0; k--) {
+            if (g.getCases()[k][j] != null && g.getCases()[k][j].getContent() instanceof Ouvrable) {
+               if (g.getCases()[k][j].getContent() instanceof BlocBombe)
+                  ((BlocBombe) g.getCases()[k][j].getContent()).open(g, k, j);
+               else if (g.getCases()[k][j].getContent() instanceof Ouvrable)
+                  g.viderCase(k, j);
+            }
+         }
       }
+
    }
 }
