@@ -50,9 +50,8 @@ public class Plateau implements Serializable {
    }
 
    public void goToNextLevel() {
-      if (indexNiveauActuel + 1 < this.niveaux.size()) {
+      if (indexNiveauActuel + 1 < this.niveaux.size())
          indexNiveauActuel++;
-      }
    }
 
    public int getIndexNiveauActuel() {
@@ -61,5 +60,9 @@ public class Plateau implements Serializable {
 
    public LinkedList<Niveau> getNiveaux() {
       return niveaux;
+   }
+
+   public void setNiveau(int index, Niveau n) {
+      this.niveaux.set(index, n);
    }
 }

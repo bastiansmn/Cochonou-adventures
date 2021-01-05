@@ -1,7 +1,8 @@
 package modele.jeu.grille.blocs;
 
 import modele.jeu.Niveau;
+import modele.jeu.grille.Grille;
 
 public interface Ouvrable {
-   int open(Niveau.Grille g, int i, int j);
+   int open(Grille g, int i, int j);
 }

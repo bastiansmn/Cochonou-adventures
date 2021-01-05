@@ -2,6 +2,7 @@ package vue.graphique;
 
 import modele.jeu.Jeu;
 import modele.jeu.Niveau;
+import modele.jeu.grille.Grille;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +15,7 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
     JLabel[] etiquettes = new JLabel[10];
     JButton precedent, suivant;
     ArrayList<JButton> boutons = new ArrayList<>();
-    modele.jeu.Niveau.Grille g = modele.jeu.Jeu.plateau.getNiveaux().get(0).getGrille();
+    Grille g = modele.jeu.Jeu.plateau.getNiveaux().get(0).getGrille();
     JPanel partie = new vue.graphique.Partie(fenetre, g);
     int Niveau;
 
@@ -91,7 +92,7 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
         } else {
             Niveau = (Niveau - Niveau % 10) + boutons.indexOf(source);
             fenetre.remove(partie);
-            modele.jeu.Niveau.Grille g = modele.jeu.Jeu.plateau.getNiveaux().get(Niveau).getGrille();
+            Grille g = modele.jeu.Jeu.plateau.getNiveaux().get(Niveau).getGrille();
             partie = new vue.graphique.Partie(fenetre, g);
             fenetre.general.add(partie, "Partie");
             fenetre.cl.show(fenetre.general, "Partie");

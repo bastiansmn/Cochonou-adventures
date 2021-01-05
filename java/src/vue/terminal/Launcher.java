@@ -5,6 +5,7 @@ import modele.jeu.Niveau;
 import modele.jeu.Plateau;
 import modele.jeu.animaux.Animal;
 import modele.jeu.bonus.Bonus;
+import modele.jeu.grille.Grille;
 import modele.jeu.grille.blocs.BlocBombe;
 import modele.jeu.grille.blocs.BlocCouleur;
 import modele.jeu.grille.blocs.BlocObstacle;
@@ -72,7 +73,7 @@ public class Launcher {
       }
    }
 
-   public void jouerGrille(Niveau.Grille g) {
+   public void jouerGrille(Grille g) {
       boolean quitter = false;
       do {
          clear();
@@ -82,8 +83,8 @@ public class Launcher {
          String[] option = getOptionGrille();
 
          switch (Integer.parseInt(option[0])) {
-            case 0 -> g.actionOuvertureGrille(Integer.parseInt(option[1].substring(1)) - 1, option[1].toUpperCase().charAt(0) - 65);
-            case 1 -> g.actionBonus(option[1].substring(0, 2), Integer.parseInt(option[1].substring(4)) - 1, option[1].toUpperCase().charAt(3) - 65);
+            case 0 -> g.actionOuvertureGrille(Integer.parseInt(option[1].substring(1)) + (g.getLongueur() - 8), option[1].toUpperCase().charAt(0) - 65);
+            case 1 -> g.actionBonus(option[1].substring(0, 2), Integer.parseInt(option[1].substring(4)) + (g.getLongueur() - 8), option[1].toUpperCase().charAt(3) - 65);
             case 2 -> afficherAideGrille();
             case 3 -> quitter = true;
          }
@@ -136,10 +137,10 @@ public class Launcher {
    }
 
    public void afficherNiveau(Niveau n) {
-      System.out.println("Niveau {" + (n.getNumNiveau()+1) + "}" + (n.getGrille().isGagne() ? " *" : ""));
+      System.out.println("Niveau {" + (n.getNumNiveau()+1) + "}" + (n.isGagne() ? " *" : ""));
    }
 
-   public void afficherGrille(Niveau.Grille g) {
+   public void afficherGrille(Grille g) {
       System.out.println("┌───────────────────┐\n" +
             "│  Score : " + "0".repeat(7 - Integer.toString(g.getScore()).length()) + g.getScore() + "  │\n" +
             "│  Animaux :  " + g.getAnimauxSauvee() + '/' + g.getAnimauxRestants() + "   │\n" +
@@ -153,9 +154,9 @@ public class Launcher {
          System.out.print((char) (i + 65) + " ");
       }
       System.out.println("\n  ┌─" + "──".repeat((g.getLargeur())) + "─┐");
-      for (int i = 0; i < g.getLongueur(); i++) {
-         System.out.print((i + 1) + " ".repeat(Integer.toString(i + 1).length() % 2) + "│ ");
-         for (int j = 0; j < g.getLargeur(); j++) {
+      for (int i = g.getLongueur() - 7; i < g.getLongueur(); i++) {
+         System.out.print((i - (g.getLongueur() - 8)) + " ".repeat(Integer.toString(i - (g.getLongueur() - 8)).length() % 2) + "│ ");
+         for (int j = 0; j < 7; j++) {
             if (g.getCases()[i][j] == null) {
                System.out.print("██");
             } else if (g.getCases()[i][j].getContent() == null) {

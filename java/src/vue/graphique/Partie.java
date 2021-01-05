@@ -15,13 +15,13 @@ import java.awt.event.ActionListener;
 
 public class Partie extends vue.graphique.ImagePanel implements ActionListener {
     Fenetre fenetre;
-    modele.jeu.Niveau.Grille grille;
+    Grille grille;
     JButton[] boutons;
     JButton continuer, recommencer;
     int index = 0;
     GridBagLayout gl = new GridBagLayout();
 
-    public Partie(Fenetre f, Niveau.Grille g) {
+    public Partie(Fenetre f, Grille g) {
         super(new ImageIcon("niveaux.jpg").getImage());
         this.fenetre = f;
         this.grille = g;
@@ -31,7 +31,7 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
         Afficher(g);
     }
 
-    public void Afficher(modele.jeu.Niveau.Grille g) {
+    public void Afficher(Grille g) {
         JLabel score = new JLabel("Score : " + Jeu.joueur.getScore());
         this.add(score);
         GridBagConstraints niveau = new GridBagConstraints();
@@ -99,7 +99,7 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
         } else if (source == recommencer) {
             this.removeAll();
             fenetre.remove(this);
-            modele.jeu.Niveau.Grille g = Jeu.plateau.getNiveaux().get(Jeu.plateau.getIndexNiveauActuel()).getGrille();
+            Grille g = Jeu.plateau.getNiveaux().get(Jeu.plateau.getIndexNiveauActuel()).getGrille();
             JPanel partie = new vue.graphique.Partie(fenetre, g);
             fenetre.general.add(partie, "Partie");
             fenetre.cl.show(fenetre.general, "Partie");

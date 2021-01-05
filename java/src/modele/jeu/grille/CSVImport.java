@@ -71,7 +71,7 @@ public class CSVImport extends CSVObject {
    }
 
 
-   public void exportToCSV(Niveau.Grille g) throws FileNotFoundException {
+   public void exportToCSV(Grille g) throws FileNotFoundException {
       PrintWriter printWriter = new PrintWriter("myNewLevel.csv");
 
       for (int i = 0; i < g.getLongueur(); i++) {
@@ -102,14 +102,13 @@ public class CSVImport extends CSVObject {
       printWriter.close();
    }
 
-   public Niveau.Grille getCSV(String fileName) throws CSVNotValidException {
+   public Grille getCSV(String fileName) throws CSVNotValidException {
       return getCSV(fileName, ",");
    }
 
-   public static Niveau.Grille getCSV(String fileName, String separator) throws CSVNotValidException {
+   public static Grille getCSV(String fileName, String separator) throws CSVNotValidException {
       CSVImport csv = new CSVImport(fileName, separator);
-      Niveau n = new Niveau();
-      Niveau.Grille res = n.new Grille();
+      Grille res = new Grille();
 
       res.setFileName(fileName);
       res.setSeparator(separator);
@@ -119,8 +118,6 @@ public class CSVImport extends CSVObject {
 
       res.setLongueur(csv.getCases().length);
       res.setLargeur(csv.getCases()[0].length);
-
-      n.setGrille(res);
 
       return res;
    }

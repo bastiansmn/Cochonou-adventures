@@ -2,6 +2,7 @@ package modele.jeu.bonus;
 
 import modele.jeu.Jeu;
 import modele.jeu.Niveau;
+import modele.jeu.grille.Grille;
 import modele.jeu.grille.blocs.BlocBombe;
 import modele.jeu.grille.blocs.Ouvrable;
 
@@ -22,7 +23,7 @@ public class Bombe extends Bonus {
       if (nbrRestant > 0)
          nbrRestant--;
 
-      Niveau.Grille g = Jeu.plateau.getNiveaux().get(Jeu.plateau.getIndexNiveauActuel()).getGrille();
+      Grille g = Jeu.plateau.getNiveaux().get(Jeu.plateau.getIndexNiveauActuel()).getGrille();
 
       g.viderCase(i, j);
       try {

@@ -1,10 +1,11 @@
 package modele.jeu.grille.blocs;
 
 import modele.jeu.Niveau;
+import modele.jeu.grille.Grille;
 
 public class BlocBombe extends Bloc implements Deplacable, Ouvrable {
    @Override
-   public int open(Niveau.Grille g, int i, int j) {
+   public int open(Grille g, int i, int j) {
       int summ = 0;
       g.viderCase(i, j);
       try {
