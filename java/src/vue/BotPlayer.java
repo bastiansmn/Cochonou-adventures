@@ -2,7 +2,6 @@ package vue;
 
 import modele.jeu.Jeu;
 import modele.jeu.Niveau;
-import modele.jeu.Plateau;
 import modele.jeu.animaux.Animal;
 import modele.jeu.bonus.Bonus;
 import modele.jeu.grille.Grille;
@@ -74,7 +73,6 @@ public class BotPlayer {
                                   __/ |              \s
                                  |___/               \s
                                  
-                 Appuyez sur entrée pour quitter...
                """);
          if (slowMode)
             Thread.sleep(500);
@@ -89,7 +87,6 @@ public class BotPlayer {
                                                  \s
                                                  \s
                                                  
-                   Appuyez sur entrée pour quitter ...
                """);
          if (slowMode)
             Thread.sleep(500);
@@ -99,21 +96,6 @@ public class BotPlayer {
    private void clear() {
       System.out.print("\033[H\033[2J");
       System.out.flush();
-   }
-
-   public void afficherPlateau(Plateau p) {
-      for (int i = 0; i < p.getNiveaux().size(); i++) {
-         if (i == p.getIndexNiveauActuel()) {
-            System.out.print(" -> ");
-         } else {
-            System.out.print("    ");
-         }
-         afficherNiveau(p.getNiveaux().get(i));
-      }
-   }
-
-   public void afficherNiveau(Niveau n) {
-      System.out.println("Niveau {" + (n.getNumNiveau()+1) + "}" + (n.isGagne() ? " *" : ""));
    }
 
    public void afficherGrille(Grille g) {
@@ -158,27 +140,5 @@ public class BotPlayer {
          s.append("(").append(b.getNombreRestant()).append(")");
       }
       return s.toString();
-   }
-
-   private void afficherTitreJeu() {
-      System.out.println("""
-              _____           _                                                  _                 _                      \s
-             / ____|         | |                                                | |               | |                     \s
-            | |     ___   ___| |__   ___  _ __   ___  _   _   ______    __ _  __| |_   _____ _ __ | |_ _   _ _ __ ___  ___\s
-            | |    / _ \\ / __| '_ \\ / _ \\| '_ \\ / _ \\| | | | |______|  / _` |/ _` \\ \\ / / _ \\ '_ \\| __| | | | '__/ _ \\/ __|
-            | |___| (_) | (__| | | | (_) | | | | (_) | |_| |          | (_| | (_| |\\ V /  __/ | | | |_| |_| | | |  __/\\__ \\
-             \\_____\\___/ \\___|_| |_|\\___/|_| |_|\\___/ \\__,_|           \\__,_|\\__,_| \\_/ \\___|_| |_|\\__|\\__,_|_|  \\___||___/
-                                                                                                                          \s
-                                                                                                                          \s""".indent(1));
-   }
-
-   private void affichageInfoJoueur() {
-      System.out.printf("""
-            ============================
-                       
-                Score du bot : %d
-                Nombre de vie du bot : %d
-                       
-            %n""", Jeu.joueur.getScore(), Jeu.joueur.getVie());
    }
 }
