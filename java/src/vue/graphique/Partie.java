@@ -18,8 +18,7 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
     Fenetre fenetre;
     modele.jeu.Niveau.Grille grille;
     JButton[] boutons;
-    JButton continuer, recommencer;
-    JLabel score;
+    JButton continuer, recommencer, informations;
     int index = 0;
     GridBagLayout gl = new GridBagLayout();
 
@@ -34,8 +33,11 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
     }
 
     public void Afficher(modele.jeu.Niveau.Grille g) {
-        score = new JLabel("Score : " + g.getScore());
-        this.add(score);
+        informations = new JButton("Informations niveau");
+        informations.setToolTipText("<html>Score : " + Jeu.joueur.getScore() + "<br/>" +
+                                    "Animaux sauvés : " + g.getAnimauxSauvee() + "/" + g.getAnimauxRestants() + "<br/>" +
+                                    "Nombre de vie : " + Jeu.joueur.getVie() + "</html>");
+        this.add(informations);
         GridBagConstraints niveau = new GridBagConstraints();
         niveau.fill = GridBagConstraints.HORIZONTAL;
         for (int i = 0; i < g.getLongueur(); i++) {
@@ -109,7 +111,6 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
             }
         else {
             continuer = new JButton("Menu principal");
-            continuer.setBounds(300,500,100,40);
             continuer.setBackground(new Color(0, 0, 0));
             continuer.setForeground(new Color(255,255,255));
             continuer.addActionListener(this);
@@ -118,8 +119,9 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
                 this.setLayout(null);
                 Icon img = new ImageIcon("gagne.png");
                 etat.setIcon(img);
-                etat.setBounds(200, -175, 1000, 1000);
+                etat.setBounds(175, -175, 1000, 1000);
                 this.add(etat);
+                continuer.setBounds(400,500,150,40);
                 updateGrille.gridx = 10;
                 updateGrille.gridy = 50;
                 this.add(continuer, updateGrille);
@@ -133,6 +135,7 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
                 etat.setIcon(img);
                 etat.setBounds(200, -175, 1000, 1000);
                 this.add(etat);
+                continuer.setBounds(325,500,150,40);
                 updateGrille.gridx = 10;
                 updateGrille.gridy = 50;
                 this.add(continuer, updateGrille);

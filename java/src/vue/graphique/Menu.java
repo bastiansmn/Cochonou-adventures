@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class Menu extends vue.graphique.ImagePanel implements ActionListener {
     Fenetre fenetre;
     JLabel[] etiquettes;
-    JButton precedent, suivant;
+    JButton precedent, suivant, reglements;
     ArrayList<JButton> boutons = new ArrayList<>();
     modele.jeu.Niveau.Grille g = modele.jeu.Jeu.plateau.getNiveaux().get(0).getGrille();
     JPanel partie = new vue.graphique.Partie(fenetre, g);
@@ -80,6 +80,12 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
             boutons.get(i).setBorderPainted(false);
             this.add(boutons.get(i), "i");
         }
+        reglements = new JButton("Réglement");
+        reglements.setBounds(875, 20, 100, 40);
+        reglements.setBackground(new Color(217, 2, 238));
+        reglements.setForeground(new Color(0, 0, 0));
+        reglements.addActionListener(this);
+        this.add(reglements);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -94,7 +100,19 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
             JPanel menuBis = new Menu(fenetre, Niveau = Niveau + 10, 100);
             fenetre.general.add(menuBis, "MenuBis");
             fenetre.cl.show(fenetre.general, "MenuBis");
-        } else {
+        } else if (source == reglements) {
+            JOptionPane.showMessageDialog(fenetre,
+                    "<html>But du jeu : </br>" +
+                    "    - Dans chaques niveau, sauvez tous les animaux.<br/>" +
+                    "    - Cassez les blocs pour les faire descendre jusqu'en bas.<br/>" +
+                    "    - Utilisez vos bonus lorsque vous êtes coincés.<br/>" +
+                    "<br>" +
+                    "Comment jouer : <br/>" +
+                    "    - Cliquez ou entrez la position du bloc que vous souhaitez casser, ses blocs adjacents de même</html>",
+                    "Réglement",
+                    JOptionPane.QUESTION_MESSAGE);
+        }
+        else {
             if(Jeu.plateau.getNiveaux().get(Integer.parseInt(((JButton)e.getSource()).getText())).canPlay()) {
                 Niveau = (Niveau - Niveau % 10) + boutons.indexOf(source);
                 fenetre.remove(partie);
