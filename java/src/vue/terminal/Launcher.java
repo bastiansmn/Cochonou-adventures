@@ -16,7 +16,7 @@ import java.util.Scanner;
 
 public class Launcher {
 
-   public int runTextual() throws InterruptedException {
+   public void runTextual() throws InterruptedException {
       clear();
       afficherTitreJeu();
       System.out.println("\n");
@@ -53,8 +53,6 @@ public class Launcher {
 
          clear();
       } while (!reponse.equals("q"));
-
-      return 0;
    }
 
    private void jouerNiveau(Niveau n) {
