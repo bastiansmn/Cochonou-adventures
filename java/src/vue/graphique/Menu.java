@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class Menu extends vue.graphique.ImagePanel implements ActionListener {
     Fenetre fenetre;
-    JLabel[] etiquettes = new JLabel[10];
+    JLabel[] etiquettes;
     JButton precedent, suivant;
     ArrayList<JButton> boutons = new ArrayList<>();
     modele.jeu.Niveau.Grille g = modele.jeu.Jeu.plateau.getNiveaux().get(0).getGrille();
@@ -34,20 +34,25 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
         Niveau(int i, int x, int y) {
             niveau = i + 1;
             etiquettes[index] = new JLabel("  NIVEAU " + niveau);
-            if(Jeu.plateau.getNiveaux().get(i).getGrille().isGagne()) {
+            if(Jeu.plateau.getNiveaux().get(i).canPlay()) {
                 etiquettes[index].setForeground(new Color(0, 0, 0));
                 this.setBackground(new Color(243, 202, 32));
+                if(Jeu.plateau.getNiveaux().get(i).getGrille().isGagne()) {
+                    this.setToolTipText("Score : " + Jeu.joueur.getScore());
+                }
             } else {
                 etiquettes[index].setForeground(new Color(243, 202, 32));
                 this.setBackground(new Color(0, 0, 0));
             }
             this.setBounds(x, y, 100, 40);
+            this.setText("" + i);
             this.add(etiquettes[index]);
             index++;
         }
     }
 
     void creationBoutons(int niveauActuel, int niveauMax) {
+        this.removeAll();
         int max = 10;
         if ((niveauActuel - niveauActuel % 10) != 0) {
             precedent = new JButton("Précedent");
@@ -72,7 +77,8 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
         for (int i = 0; i < max; i++) {
             boutons.add(new Niveau((niveauActuel - niveauActuel % 10) + i, coords[i][0], coords[i][1]));
             boutons.get(i).addActionListener(this);
-            this.add(boutons.get(i));
+            boutons.get(i).setBorderPainted(false);
+            this.add(boutons.get(i), "i");
         }
     }
 
@@ -89,13 +95,19 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
             fenetre.general.add(menuBis, "MenuBis");
             fenetre.cl.show(fenetre.general, "MenuBis");
         } else {
-            Niveau = (Niveau - Niveau % 10) + boutons.indexOf(source);
-            fenetre.remove(partie);
-            modele.jeu.Niveau.Grille g = modele.jeu.Jeu.plateau.getNiveaux().get(Niveau).getGrille();
-            partie = new vue.graphique.Partie(fenetre, g);
-            fenetre.general.add(partie, "Partie");
-            fenetre.cl.show(fenetre.general, "Partie");
-            fenetre.validate();
+            if(Jeu.plateau.getNiveaux().get(Integer.parseInt(((JButton)e.getSource()).getText())).canPlay()) {
+                Niveau = (Niveau - Niveau % 10) + boutons.indexOf(source);
+                fenetre.remove(partie);
+                partie = new vue.graphique.Partie(fenetre, modele.jeu.Jeu.plateau.getNiveaux().get(Niveau).getGrille());
+                fenetre.general.add(partie, "Partie");
+                fenetre.cl.show(fenetre.general, "Partie");
+                fenetre.validate();
+            } else {
+                JOptionPane.showMessageDialog(fenetre,
+                        "Désolé, vous ne pouvez pas encore accéder à ce niveau.",
+                        "Niveau inaccessible",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 }

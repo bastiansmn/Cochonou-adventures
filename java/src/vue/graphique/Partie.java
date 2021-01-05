@@ -8,6 +8,7 @@ import modele.jeu.grille.blocs.BlocCouleur;
 import modele.jeu.grille.blocs.BlocObstacle;
 import modele.jeu.grille.*;
 
+import javax.sound.midi.SysexMessage;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -18,6 +19,7 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
     modele.jeu.Niveau.Grille grille;
     JButton[] boutons;
     JButton continuer, recommencer;
+    JLabel score;
     int index = 0;
     GridBagLayout gl = new GridBagLayout();
 
@@ -32,7 +34,7 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
     }
 
     public void Afficher(modele.jeu.Niveau.Grille g) {
-        JLabel score = new JLabel("Score : " + Jeu.joueur.getScore());
+        score = new JLabel("Score : " + g.getScore());
         this.add(score);
         GridBagConstraints niveau = new GridBagConstraints();
         niveau.fill = GridBagConstraints.HORIZONTAL;
@@ -91,75 +93,64 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
         this.removeAll();
         grille.actionOuvertureGrille(updateGrille.gridy, updateGrille.gridx);
         if (source == continuer) {
+            fenetre.menu.removeAll();
             fenetre.remove(fenetre.menu);
             fenetre.menu = new Menu(fenetre, Jeu.plateau.getIndexNiveauActuel(), Jeu.plateau.getNiveaux().size());
+            fenetre.general.add(fenetre.menu, "Menu");
             fenetre.cl.show(fenetre.general, "Menu");
-            this.validate();
-            this.repaint();
-        } else if (source == recommencer) {
-            this.removeAll();
-            fenetre.remove(this);
-            modele.jeu.Niveau.Grille g = Jeu.plateau.getNiveaux().get(Jeu.plateau.getIndexNiveauActuel()).getGrille();
-            JPanel partie = new vue.graphique.Partie(fenetre, g);
-            fenetre.general.add(partie, "Partie");
-            fenetre.cl.show(fenetre.general, "Partie");
             fenetre.validate();
-        }
-        if(grille.isGagne()) {
-            this.setLayout(null);
-            Icon img = new ImageIcon("gagne.png");
-            JLabel victoire = new JLabel();
-            victoire.setIcon(img);
-            victoire.setBounds(200,-175,1000,1000);
-            this.add(victoire);
-            updateGrille.gridx = 10;
-            updateGrille.gridy = 50;
-            continuer = new JButton("Menu principal");
-            continuer.setBounds(300,500,100,40);
-            continuer.setBackground(new Color(0, 0, 0));
-            continuer.setForeground(new Color(255,255,255));
-            continuer.addActionListener(this);
-            this.add(continuer, updateGrille);
-            updateGrille.gridx = 30;
-            updateGrille.gridy = 300;
-            recommencer = new JButton("Recommencer");
-            recommencer.setBounds(550,500,150,40);
-            recommencer.setBackground(new Color(0, 0, 0));
-            recommencer.setForeground(new Color(255,255,255));
-            recommencer.addActionListener(this);
-            this.add(recommencer, updateGrille);
-            this.repaint();
-            this.validate();
-        } else if (grille.isPerdu()) {
-            this.setLayout(null);
-            Icon img = new ImageIcon("perte.png");
-            JLabel perte = new JLabel();
-            perte.setIcon(img);
-            perte.setBounds(200,-175,1000,1000);
-            this.add(perte);
-            updateGrille.gridx = 10;
-            updateGrille.gridy = 50;
-            continuer = new JButton("Menu principal");
-            continuer.setBounds(300,500,100,40);
-            continuer.setBackground(new Color(0, 0, 0));
-            continuer.setForeground(new Color(255,255,255));
-            continuer.addActionListener(this);
-            this.add(continuer, updateGrille);
-            updateGrille.gridx = 30;
-            updateGrille.gridy = 300;
-            recommencer = new JButton("Recommencer");
-            recommencer.setBounds(550,500,150,40);
-            recommencer.setBackground(new Color(0, 0, 0));
-            recommencer.setForeground(new Color(255,255,255));
-            recommencer.addActionListener(this);
-            this.add(recommencer, updateGrille);
-            this.repaint();
-            this.validate();
-        }
+        } else if (source == recommencer) {
+                this.removeAll();
+                fenetre.remove(this);
+                JPanel partie = new vue.graphique.Partie(fenetre, Jeu.plateau.getNiveaux().get(Jeu.plateau.getIndexNiveauActuel()).getGrille());
+                fenetre.general.add(partie, "Partie");
+                fenetre.cl.show(fenetre.general, "Partie");
+                fenetre.validate();
+            }
         else {
-            this.repaint();
-            this.Afficher(grille);
-            this.validate();
+            continuer = new JButton("Menu principal");
+            continuer.setBounds(300,500,100,40);
+            continuer.setBackground(new Color(0, 0, 0));
+            continuer.setForeground(new Color(255,255,255));
+            continuer.addActionListener(this);
+            JLabel etat = new JLabel();
+            if (grille.isGagne()) {
+                this.setLayout(null);
+                Icon img = new ImageIcon("gagne.png");
+                etat.setIcon(img);
+                etat.setBounds(200, -175, 1000, 1000);
+                this.add(etat);
+                updateGrille.gridx = 10;
+                updateGrille.gridy = 50;
+                this.add(continuer, updateGrille);
+                updateGrille.gridx = 30;
+                updateGrille.gridy = 300;
+                this.repaint();
+                this.validate();
+            } else if (grille.isPerdu()) {
+                this.setLayout(null);
+                Icon img = new ImageIcon("perte.png");
+                etat.setIcon(img);
+                etat.setBounds(200, -175, 1000, 1000);
+                this.add(etat);
+                updateGrille.gridx = 10;
+                updateGrille.gridy = 50;
+                this.add(continuer, updateGrille);
+                updateGrille.gridx = 30;
+                updateGrille.gridy = 300;
+                recommencer = new JButton("Recommencer");
+                recommencer.setBounds(550, 500, 150, 40);
+                recommencer.setBackground(new Color(0, 0, 0));
+                recommencer.setForeground(new Color(255, 255, 255));
+                recommencer.addActionListener(this);
+                this.add(recommencer, updateGrille);
+                this.repaint();
+                this.validate();
+            } else {
+                this.repaint();
+                this.Afficher(grille);
+                this.validate();
+            }
         }
     }
 }
