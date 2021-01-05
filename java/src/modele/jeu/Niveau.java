@@ -28,6 +28,10 @@ public class Niveau implements Serializable {
       if (grille.isGagne()) {
          Jeu.joueur.gagner(grille.getScore());
          isGagne = true;
+         try {
+            this.grille = CSVImport.getCSV(grille.getFileName(), grille.getSeparator());
+            Jeu.plateau.setNiveau(numNiveau, this);
+         } catch (CSVNotValidException ignored) {}
          Jeu.plateau.setNiveau(numNiveau, this);
          if (numNiveau + 1 < Jeu.plateau.getNiveaux().size()) {
             Jeu.plateau.getNiveaux().get(numNiveau + 1).setJouable();
