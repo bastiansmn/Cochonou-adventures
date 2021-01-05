@@ -36,8 +36,8 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
         this.add(score);
         GridBagConstraints niveau = new GridBagConstraints();
         niveau.fill = GridBagConstraints.HORIZONTAL;
-        for (int i = 0; i < g.getLongueur(); i++) {
-            for (int j = 0; j < g.getLargeur(); j++) {
+        for (int i = g.getLongueur() - 7; i < g.getLongueur(); i++) {
+            for (int j = 0; j < 7; j++) {
                 if (g.getCases()[i][j] != null) {
                     this.boutons[index] = new JButton();
                     boutons[index].setOpaque(false);
@@ -130,6 +130,8 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
             this.add(recommencer, updateGrille);
             this.repaint();
             this.validate();
+            System.out.println(grille.isGagne());
+            System.out.println(Jeu.plateau.getNiveaux().get(1).getGrille().isGagne());
         } else if (grille.isPerdu()) {
             this.setLayout(null);
             Icon img = new ImageIcon("perte.png");
