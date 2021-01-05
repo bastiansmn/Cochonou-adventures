@@ -2,6 +2,7 @@ package vue.graphique;
 
 import modele.jeu.Jeu;
 import modele.jeu.Niveau;
+import modele.jeu.grille.Grille;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +15,7 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
     JLabel[] etiquettes;
     JButton precedent, suivant, reglements;
     ArrayList<JButton> boutons = new ArrayList<>();
-    modele.jeu.Niveau.Grille g = modele.jeu.Jeu.plateau.getNiveaux().get(0).getGrille();
+    Grille g = modele.jeu.Jeu.plateau.getNiveaux().get(0).getGrille();
     JPanel partie = new vue.graphique.Partie(fenetre, g);
     int Niveau;
 
@@ -80,8 +81,8 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
             boutons.get(i).setBorderPainted(false);
             this.add(boutons.get(i), "i");
         }
-        reglements = new JButton("Réglement");
-        reglements.setBounds(875, 20, 100, 40);
+        reglements = new JButton("Règles du jeu");
+        reglements.setBounds(825, 20, 120, 40);
         reglements.setBackground(new Color(217, 2, 238));
         reglements.setForeground(new Color(0, 0, 0));
         reglements.addActionListener(this);
@@ -103,13 +104,13 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
         } else if (source == reglements) {
             JOptionPane.showMessageDialog(fenetre,
                     "<html>But du jeu : </br>" +
-                    "    - Dans chaques niveau, sauvez tous les animaux.<br/>" +
+                    "    - Dans chaque niveau, sauvez tous les animaux.<br/>" +
                     "    - Cassez les blocs pour les faire descendre jusqu'en bas.<br/>" +
                     "    - Utilisez vos bonus lorsque vous êtes coincés.<br/>" +
                     "<br>" +
                     "Comment jouer : <br/>" +
                     "    - Cliquez ou entrez la position du bloc que vous souhaitez casser, ses blocs adjacents de même</html>",
-                    "Réglement",
+                    "Regles du jeu",
                     JOptionPane.QUESTION_MESSAGE);
         }
         else {
