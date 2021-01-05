@@ -40,15 +40,15 @@ public class Grille implements Serializable {
    public void actionOuvertureGrille(int i, int j) {
       if (i >= 0 && i < cases.length && j >= 0 && j < cases[i].length) {
          if (cases[i][j] != null && cases[i][j].getContent() instanceof Ouvrable) {
-            this.score += (int) (1000 * Math.pow(((Ouvrable) cases[i][j].getContent()).open(this, i, j), 2));
-            apresCoup();
+            int score = (int) (1000 * Math.pow(((Ouvrable) cases[i][j].getContent()).open(this, i, j), 2));
+            this.score += score;
+            apresCoup(score != 0);
             if (Jeu.serialisation) {
                try (FileOutputStream fos = new FileOutputStream("ser/jeu.ser");
                     ObjectOutputStream oos = new ObjectOutputStream(fos)) {
                   oos.writeObject(Jeu.plateau);
                   oos.writeObject(Jeu.joueur);
-               } catch (IOException ignored) {
-               }
+               } catch (IOException ignored) {}
             }
          }
       }
@@ -58,14 +58,15 @@ public class Grille implements Serializable {
       for (Bonus bonusInitiales : Jeu.joueur.bonus)
          if (s.equals(bonusInitiales.getInit())) {
             bonusInitiales.utiliser(i, j);
-            apresCoup();
+            apresCoup(true);
             return;
          }
    }
 
-   public void apresCoup() {
+   public void apresCoup(boolean didMove) {
       nettoyerGrille();
-      nombreLimiteDeCoup--;
+      if (didMove)
+         nombreLimiteDeCoup--;
       if (isGagne())
          Jeu.plateau.getNiveaux().get(Jeu.plateau.getIndexNiveauActuel()).gagner();
       if (isPerdu())
@@ -77,7 +78,6 @@ public class Grille implements Serializable {
          faireTomber(j);
          if (j < cases[cases.length - 1].length - 1)
             balayageGauche(j + 1);
-         // faireTomber(j);
       }
    }
 

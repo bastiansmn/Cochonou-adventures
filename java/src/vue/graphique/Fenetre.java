@@ -25,7 +25,6 @@ public class Fenetre extends JFrame {
         this.general.add(this.menu, "Menu");
         this.cl.show(this.general, "Menu");
         this.add(this.general);
-        this.setVisible(true);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 }

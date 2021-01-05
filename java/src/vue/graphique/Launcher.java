@@ -1,12 +1,15 @@
 package vue.graphique;
 
+import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 
 public class Launcher {
 
 
-   public int runGraphical() throws InvocationTargetException, InterruptedException {
-      Fenetre g = new Fenetre();
-      return 0;
+   public void runGraphical() throws InvocationTargetException, InterruptedException {
+      SwingUtilities.invokeAndWait(() -> {
+         Fenetre g = new Fenetre();
+         g.setVisible(true);
+      });
    }
 }

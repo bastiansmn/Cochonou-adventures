@@ -1,4 +1,4 @@
-package vue.terminal;
+package vue;
 
 import modele.jeu.Jeu;
 import modele.jeu.Niveau;
@@ -9,84 +9,55 @@ import modele.jeu.grille.Grille;
 import modele.jeu.grille.blocs.BlocBombe;
 import modele.jeu.grille.blocs.BlocCouleur;
 import modele.jeu.grille.blocs.BlocObstacle;
-import modele.outils.erreurs.Erreur;
 
 import java.util.Arrays;
-import java.util.Scanner;
+import java.util.Random;
 
-public class Launcher {
+public class BotPlayer {
+   public boolean slowMode = Jeu.slowMode;
 
-   public void runTextual() throws InterruptedException {
-      clear();
-      afficherTitreJeu();
-      System.out.println("\n");
+   public void runBot() throws InterruptedException {
+      System.out.println("Le bot va lancer les niveaux dans l'ordre");
       Thread.sleep(1000);
-
-      System.out.println("Bienvenue sur Cochonou-adventures " + Jeu.joueur.getNom() + " !\n\n");
-      Thread.sleep(2000);
-
-      String reponse;
-      do {
-         clear();
-         affichageInfoJoueur();
-         afficherPlateau(Jeu.plateau);
-         System.out.println("\n[* = niveau déjà gagné]");
-         System.out.println("[? pour afficher les règles]\n\n============================\n\nUtilisez z/s pour changer de niveau, d pour lancer le niveau sélectionné ou entrez le numéro d'un niveau :");
-         reponse = new Scanner(System.in).next();
-
-         if (reponse.matches("[0-9]+")) {
-            Niveau n = Jeu.plateau.jouerNiveauParNumero(Integer.parseInt(reponse) - 1);
-            if (n != null)
-               jouerNiveau(n);
-            else
-               Erreur.afficher("Ce niveau n'existe pas " + Jeu.joueur.getNom() + " !");
-
-         } else {
-            switch (reponse) {
-               case "z" -> Jeu.plateau.deplacerGauche();
-               case "s" -> Jeu.plateau.deplacerDroite();
-               case "d" -> jouerNiveau(Jeu.plateau.getNiveaux().get(Jeu.plateau.getIndexNiveauActuel()));
-               case "?" -> reglesDuJeu();
-               default -> Erreur.afficher("Euuuh ... " + Jeu.joueur.getNom() + " ? Je ne comprend pas trop ce que vous cherchez à me dire");
-            }
-         }
-
-         clear();
-      } while (!reponse.equals("q"));
-   }
-
-   private void jouerNiveau(Niveau n) {
-      if (n.canPlay()) {
-         try {
-            System.out.println("Le niveau va commencer ...");
-            Thread.sleep(1000);
-         } catch (InterruptedException e) {
-            e.printStackTrace();
-         }
-         System.out.println("\n");
-         jouerGrille(n.getGrille());
-         clear();
-      } else {
-         Erreur.afficher("Vous ne pouvez pas jouer ce niveau");
+      for (Niveau niveau : Jeu.plateau.getNiveaux()) {
+         jouerNiveau(niveau);
+         if (slowMode)
+            Thread.sleep(500);
       }
    }
 
-   public void jouerGrille(Grille g) {
-      boolean quitter = false;
+   private void jouerNiveau(Niveau n) throws InterruptedException {
+      while  (!n.isGagne()) {
+         jouerGrille(n.getGrille());
+         clear();
+      }
+   }
+
+   public void jouerGrille(Grille g) throws InterruptedException {
       do {
          clear();
          afficherGrille(g);
 
-         // Demander l'action à faire.
-         String[] option = getOptionGrille();
+         // Générer l'action à faire.
+         String[] bonusInit = new String[]{"fw", "bo", "li", "co", "ma"};
 
-         switch (Integer.parseInt(option[0])) {
-            case 0 -> g.actionOuvertureGrille(Integer.parseInt(option[1].substring(1)) + (g.getLongueur() - 8), option[1].toUpperCase().charAt(0) - 65);
-            case 1 -> g.actionBonus(option[1].substring(0, 2), Integer.parseInt(option[1].substring(4)) + (g.getLongueur() - 8), option[1].toUpperCase().charAt(3) - 65);
-            case 2 -> afficherAideGrille();
-            case 3 -> quitter = true;
-         }
-      } while (!g.isGagne() && !quitter && !g.isPerdu());
+         StringBuilder toDo = new StringBuilder();
+         boolean bonus = new Random().nextBoolean() && new Random().nextBoolean();
+
+         if (bonus)
+            toDo.append(bonusInit[new Random().nextInt(5)]).append(" ");
+
+         toDo.append(Character.valueOf((char) (new Random().nextInt(7) + 65)));
+         toDo.append(new Random().nextInt(7) + 1);
+
+         if (toDo.toString().matches("[a-z][a-z] [A-Z][0-9]+"))
+            g.actionBonus(toDo.substring(0, 2), Integer.parseInt(toDo.substring(4)) + (g.getLongueur() - 8), toDo.toString().toUpperCase().charAt(3) - 65);
+         else
+            g.actionOuvertureGrille(Integer.parseInt(toDo.substring(1)) + (g.getLongueur() - 8), toDo.toString().toUpperCase().charAt(0) - 65);
+
+         if (slowMode)
+            Thread.sleep(2000);
+      } while (!g.isGagne() && !g.isPerdu());
       if (g.isGagne()) {
          clear();
          System.out.println("""
@@ -105,7 +76,8 @@ public class Launcher {
                                  
                  Appuyez sur entrée pour quitter...
                """);
-         new Scanner(System.in).nextLine();
+         if (slowMode)
+            Thread.sleep(500);
       } else if (g.isPerdu()) {
          System.out.println("""
                     _____             _         _\s
@@ -119,8 +91,14 @@ public class Launcher {
                                                  
                    Appuyez sur entrée pour quitter ...
                """);
-         new Scanner(System.in).nextLine();
+         if (slowMode)
+            Thread.sleep(500);
       }
+   }
+
+   private void clear() {
+      System.out.print("\033[H\033[2J");
+      System.out.flush();
    }
 
    public void afficherPlateau(Plateau p) {
@@ -174,40 +152,6 @@ public class Launcher {
       System.out.println("  └─" + "──".repeat((g.getLargeur())) + "─┘");
    }
 
-   public String[] getOptionGrille() {
-      Scanner sc = new Scanner(System.in);
-      String s;
-      int option = -1;
-      do {
-         System.out.println("[? pour afficher l'aide]\nQue voulez vous jouer ?");
-         s = sc.nextLine();
-         if (s.matches("^([A-Z][0-9]+)")) {
-            option = 0; // Une case à détruire.
-         } else if (s.matches("[a-z][a-z] [A-Z][0-9]+")) {
-            option = 1; // Ouvrir un bonus.
-         } else if (s.equals("?")) {
-            option = 2; // Ouvrir l'aide
-         } else if (s.equals("q")) {
-            option = 3; // Quitter le niveau
-         } else {
-            s = "";
-         }
-      } while (s.equals(""));
-      return new String[]{Integer.toString(option), s};
-   }
-
-   public void afficherAideGrille() {
-      clear();
-      System.out.println("""
-               Entrez : 
-               - Le numéro de case pour la détruire (sous la forme LETTRE/NOMBRE)
-               - Les lettres du bonus pour l'utiliser   
-               
-               [Appuyez sur entrée pour quitter l'aide]   
-            """);
-      new Scanner(System.in).nextLine();
-   }
-
    private String afficherNbrBonus() {
       StringBuilder s = new StringBuilder();
       for (Bonus b : Jeu.joueur.bonus) {
@@ -232,49 +176,9 @@ public class Launcher {
       System.out.printf("""
             ============================
                        
-                Votre score : %d
-                Votre nombre de vie : %d
+                Score du bot : %d
+                Nombre de vie du bot : %d
                        
             %n""", Jeu.joueur.getScore(), Jeu.joueur.getVie());
-   }
-
-   private void clear() {
-      System.out.print("\033[H\033[2J");
-      System.out.flush();
-   }
-
-   public static void displayHelp() {
-      System.out.println("""
-               Aide du jeu : 
-                  Veuillez lancer le jeu avec un mode (graphique ou terminal)
-                  Pour cela :
-                     - MODE GRAPHIQUE : utilisez l'argument "-g" ou "--graphical"
-                     - MODE TERMINAL : utilisez l'argument "-t" ou "--textual"
-                     
-                  Pour le lien vers le projet : 
-                  https://github.com/bastiansmn/Chochonou-adventures
-            """);
-   }
-
-   public void reglesDuJeu() {
-      clear();
-      System.out.println("""
-            But du jeu :
-                - Dans chaques niveau, sauvez tous les animaux.
-                - Cassez les blocs pour les faire descendre jusqu'en bas.
-                - Utilisez vos bonus lorsque vous êtes coincés. 
-                
-            Comment jouer :
-                - Cliquez ou entrez la position du bloc que vous souhaitez casser, ses blocs adjacents de même
-            couleur seront détruits aussi.
-                - Chaque animal est représenté par une lettre différente :
-                   * Chat : c
-                   * Chien : C
-                   * Oiseau : o
-                   * Panda : p
-                   
-            Appuyez sur entrée pour quitter...
-             """);
-      new Scanner(System.in).nextLine();
    }
 }
