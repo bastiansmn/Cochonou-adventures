@@ -36,11 +36,10 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
             niveau = i + 1;
             etiquettes[index] = new JLabel("  NIVEAU " + niveau);
             if(Jeu.plateau.getNiveaux().get(i).canPlay()) {
+                    this.setToolTipText("Score : " + Jeu.plateau.getNiveaux().get(i).getGrille().getScore());
                 etiquettes[index].setForeground(new Color(0, 0, 0));
                 this.setBackground(new Color(243, 202, 32));
-                if(Jeu.plateau.getNiveaux().get(i).getGrille().isGagne()) {
-                    this.setToolTipText("Score : " + Jeu.joueur.getScore());
-                }
+                System.out.println(Jeu.plateau.getNiveaux().get(0).getGrille().isGagne());
             } else {
                 etiquettes[index].setForeground(new Color(243, 202, 32));
                 this.setBackground(new Color(0, 0, 0));
@@ -109,7 +108,7 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
                     "    - Utilisez vos bonus lorsque vous êtes coincés.<br/>" +
                     "<br>" +
                     "Comment jouer : <br/>" +
-                    "    - Cliquez ou entrez la position du bloc que vous souhaitez casser, ses blocs adjacents de même</html>",
+                    "    - Cliquez sur la position du bloc que vous souhaitez casser, les blocs adjacents de même</html>",
                     "Regles du jeu",
                     JOptionPane.QUESTION_MESSAGE);
         }

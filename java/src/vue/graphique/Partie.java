@@ -20,6 +20,8 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
     JButton continuer, recommencer;
     int index = 0;
     GridBagLayout gl = new GridBagLayout();
+    Bonus[] bonus = new Bonus[5];
+    Bonus bonuSelected;
 
     public Partie(Fenetre f, Grille g) {
         super(new ImageIcon("niveaux.jpg").getImage());
@@ -27,15 +29,39 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
         this.grille = g;
         this.setLayout(gl);
         this.setVisible(true);
-        boutons = new JButton[g.getLongueur() * g.getLargeur()];
+        boutons = new JButton[g.getLongueur() + 1 * g.getLargeur() + 1];
         Afficher(g);
     }
 
+    class Bonus extends JButton {
+        String init;
+
+        public Bonus(String init) {
+            this.init = init;
+            this.setIcon(new ImageIcon("case-" + init + ".png"));
+        }
+    }
+
+    public void initBonus(GridBagConstraints n) {
+        n.gridx = 1;
+        n.gridy = 8;
+        for (int i = 0; i < Jeu.joueur.bonus.length; i++) {
+            bonus[i] = new Bonus(Jeu.joueur.bonus[i].getInit());
+            this.add(bonus[i], n);
+            n.gridx++;
+            bonus[i].setOpaque(false);
+            bonus[i].setContentAreaFilled(false);
+            bonus[i].setBorderPainted(false);
+            bonus[i].addActionListener(this);
+        }
+    }
+
     public void Afficher(Grille g) {
-        JLabel score = new JLabel("Score : " + Jeu.joueur.getScore());
+        JLabel score = new JLabel("Score : " + g.getScore());
         this.add(score);
         GridBagConstraints niveau = new GridBagConstraints();
         niveau.fill = GridBagConstraints.HORIZONTAL;
+        initBonus(niveau);
         for (int i = g.getLongueur() - 7; i < g.getLongueur(); i++) {
             for (int j = 0; j < 7; j++) {
                 if (g.getCases()[i][j] != null) {
@@ -85,11 +111,25 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        Boolean BonusActivated = false;
         Object source = e.getSource();
         GridBagConstraints updateGrille = gl.getConstraints((Component) source);
         updateGrille.fill = GridBagConstraints.HORIZONTAL;
         this.removeAll();
-        grille.actionOuvertureGrille(updateGrille.gridy, updateGrille.gridx);
+        if(bonuSelected != null) {
+            if(bonuSelected.init == "fw") {
+                if(updateGrille.gridx < 7) {
+                    grille.actionBonus(bonuSelected.init, 7, updateGrille.gridx);
+                }
+            }else {
+                if(updateGrille.gridy < 7 && updateGrille.gridx < 7) {
+                    grille.actionBonus(bonuSelected.init, updateGrille.gridy, updateGrille.gridx);
+                }
+            }
+            bonuSelected = null;
+        } else {
+            grille.actionOuvertureGrille(updateGrille.gridy, updateGrille.gridx);
+        }
         if (source == continuer) {
             fenetre.remove(fenetre.menu);
             fenetre.menu = new Menu(fenetre, Jeu.plateau.getIndexNiveauActuel(), Jeu.plateau.getNiveaux().size());
@@ -104,61 +144,74 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
             fenetre.general.add(partie, "Partie");
             fenetre.cl.show(fenetre.general, "Partie");
             fenetre.validate();
+        } else {
+            if(source == bonus[0]) {
+                bonuSelected = bonus[0];
+            }
+            if(source == bonus[1]) {
+                bonuSelected = bonus[1];
+            }
+            if(source == bonus[2]) {
+                bonuSelected = bonus[2];
+            }
+            if(source == bonus[3]) {
+                bonuSelected = bonus[3];
+            }
+            if(source == bonus[4]) {
+                bonuSelected = bonus[4];
+            }
         }
-        if(grille.isGagne()) {
+        if (grille.isGagne()) {
             this.setLayout(null);
             Icon img = new ImageIcon("gagne.png");
             JLabel victoire = new JLabel();
             victoire.setIcon(img);
-            victoire.setBounds(200,-175,1000,1000);
+            victoire.setBounds(200, -175, 1000, 1000);
             this.add(victoire);
             updateGrille.gridx = 10;
             updateGrille.gridy = 50;
             continuer = new JButton("Menu principal");
-            continuer.setBounds(300,500,100,40);
+            continuer.setBounds(300, 500, 100, 40);
             continuer.setBackground(new Color(0, 0, 0));
-            continuer.setForeground(new Color(255,255,255));
+            continuer.setForeground(new Color(255, 255, 255));
             continuer.addActionListener(this);
             this.add(continuer, updateGrille);
             updateGrille.gridx = 30;
             updateGrille.gridy = 300;
-            recommencer = new JButton("Recommencer");
-            recommencer.setBounds(550,500,150,40);
+            recommencer = new JButton("Niveau suivant");
+            recommencer.setBounds(550, 500, 150, 40);
             recommencer.setBackground(new Color(0, 0, 0));
-            recommencer.setForeground(new Color(255,255,255));
+            recommencer.setForeground(new Color(255, 255, 255));
             recommencer.addActionListener(this);
             this.add(recommencer, updateGrille);
             this.repaint();
             this.validate();
-            System.out.println(grille.isGagne());
-            System.out.println(Jeu.plateau.getNiveaux().get(1).getGrille().isGagne());
         } else if (grille.isPerdu()) {
             this.setLayout(null);
             Icon img = new ImageIcon("perte.png");
             JLabel perte = new JLabel();
             perte.setIcon(img);
-            perte.setBounds(200,-175,1000,1000);
+            perte.setBounds(200, -175, 1000, 1000);
             this.add(perte);
             updateGrille.gridx = 10;
             updateGrille.gridy = 50;
             continuer = new JButton("Menu principal");
-            continuer.setBounds(300,500,100,40);
+            continuer.setBounds(300, 500, 100, 40);
             continuer.setBackground(new Color(0, 0, 0));
-            continuer.setForeground(new Color(255,255,255));
+            continuer.setForeground(new Color(255, 255, 255));
             continuer.addActionListener(this);
             this.add(continuer, updateGrille);
             updateGrille.gridx = 30;
             updateGrille.gridy = 300;
             recommencer = new JButton("Recommencer");
-            recommencer.setBounds(550,500,150,40);
+            recommencer.setBounds(550, 500, 150, 40);
             recommencer.setBackground(new Color(0, 0, 0));
-            recommencer.setForeground(new Color(255,255,255));
+            recommencer.setForeground(new Color(255, 255, 255));
             recommencer.addActionListener(this);
             this.add(recommencer, updateGrille);
             this.repaint();
             this.validate();
-        }
-        else {
+        } else {
             this.repaint();
             this.Afficher(grille);
             this.validate();
