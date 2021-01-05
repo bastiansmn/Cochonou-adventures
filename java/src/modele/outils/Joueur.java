@@ -28,6 +28,10 @@ public class Joueur implements Serializable {
             '}';
    }
 
+   public void gagnerUneVie() {
+      this.vie++;
+   }
+
    public void perdreUneVie() {
       if (!plusDeVie())
          this.vie--;
