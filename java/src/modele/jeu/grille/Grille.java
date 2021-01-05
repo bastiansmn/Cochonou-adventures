@@ -22,7 +22,8 @@ public class Grille implements Serializable {
    private int animauxRestants;
    private int nombreLimiteDeCoup;
 
-   public Grille() {}
+   public Grille() {
+   }
 
    public Grille(Grille g) {
       this.cases = g.cases;
@@ -65,17 +66,17 @@ public class Grille implements Serializable {
    public void apresCoup() {
       nettoyerGrille();
       nombreLimiteDeCoup--;
-      if (isPerdu())
-         Jeu.plateau.getNiveaux().get(Jeu.plateau.getIndexNiveauActuel()).perdre();
       if (isGagne())
          Jeu.plateau.getNiveaux().get(Jeu.plateau.getIndexNiveauActuel()).gagner();
+      if (isPerdu())
+         Jeu.plateau.getNiveaux().get(Jeu.plateau.getIndexNiveauActuel()).perdre();
    }
 
    public void nettoyerGrille() {
       for (int j = 0; j < cases[cases.length - 1].length; j++) {
          faireTomber(j);
          if (j < cases[cases.length - 1].length - 1)
-            balayageGauche(j+1);
+            balayageGauche(j + 1);
          // faireTomber(j);
       }
    }
@@ -129,8 +130,12 @@ public class Grille implements Serializable {
 
    public void checkAnimauxSauvees() {
       for (int j = 0; j < cases[cases.length - 1].length; j++) {
-         if (cases[cases.length - 1][j] != null && cases[cases.length - 1][j].getContent() instanceof Animal) {
-            cases[cases.length - 1][j] = new Case(null);
+         int lowestFloor = cases.length - 1;
+         while (lowestFloor > 0 && cases[lowestFloor][j] == null) {
+            lowestFloor--;
+         }
+         if (cases[lowestFloor][j] != null && cases[lowestFloor][j].getContent() instanceof Animal) {
+            cases[lowestFloor][j] = new Case(null);
             animauxSauvee++;
             this.score += 5000;
          }
