@@ -24,7 +24,7 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
     private int niveau;
 
     public Partie(Fenetre f, Grille g, int n) {
-        super(new ImageIcon("images/niveaux.jpg").getImage());
+        super(new ImageIcon("ressources/images/niveaux.jpg").getImage());
         this.fenetre = f;
         this.grille = g;
         this.niveau = n;
@@ -38,7 +38,7 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
         modele.jeu.bonus.Bonus b;
 
         public Bonus(modele.jeu.bonus.Bonus bonus) {
-            this.setIcon(new ImageIcon("images/case-" + bonus.getInit() + ".png"));
+            this.setIcon(new ImageIcon("ressources/images/case-" + bonus.getInit() + ".png"));
             this.b = bonus;
         }
     }
@@ -84,34 +84,34 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
                     this.add(boutons[index], niveau);
                     if (g.getCases()[i][j].getContent() instanceof Animal) {
                         if (g.getCases()[i][j].getContent() instanceof Chat) {
-                            boutons[index].setIcon(new ImageIcon("images/case-chat.jpg"));
+                            boutons[index].setIcon(new ImageIcon("ressources/images/case-chat.jpg"));
                         } else if (g.getCases()[i][j].getContent() instanceof Chien) {
-                            boutons[index].setIcon(new ImageIcon("images/case-chien.jpg"));
+                            boutons[index].setIcon(new ImageIcon("ressources/images/case-chien.jpg"));
                         } else if (g.getCases()[i][j].getContent() instanceof Cochon) {
-                            boutons[index].setIcon(new ImageIcon("images/case-cochon.jpg"));
+                            boutons[index].setIcon(new ImageIcon("ressources/images/case-cochon.jpg"));
                         } else if (g.getCases()[i][j].getContent() instanceof Panda) {
-                            boutons[index].setIcon(new ImageIcon("images/case-panda.jpg"));
+                            boutons[index].setIcon(new ImageIcon("ressources/ressources/images/case-panda.jpg"));
                         } else if (g.getCases()[i][j].getContent() instanceof Oiseau) {
-                            boutons[index].setIcon(new ImageIcon("images/case-oiseau.jpg"));
+                            boutons[index].setIcon(new ImageIcon("ressources/ressources/images/case-oiseau.jpg"));
                         }
                     } else if (g.getCases()[i][j].getContent() instanceof BlocCouleur) {
                         if (((BlocCouleur) g.getCases()[i][j].getContent()).getColor().equals(Color.GREEN)) {
-                            boutons[index].setIcon(new ImageIcon("images/case-verte.jpg"));
+                            boutons[index].setIcon(new ImageIcon("ressources/images/case-verte.jpg"));
                         } else if (((BlocCouleur) g.getCases()[i][j].getContent()).getColor().equals(Color.RED)) {
-                            boutons[index].setIcon(new ImageIcon("images/case-rouge.jpg"));
+                            boutons[index].setIcon(new ImageIcon("ressources/images/case-rouge.jpg"));
                         } else if (((BlocCouleur) g.getCases()[i][j].getContent()).getColor().equals(Color.YELLOW)) {
-                            boutons[index].setIcon(new ImageIcon("images/case-jaune.jpg"));
+                            boutons[index].setIcon(new ImageIcon("ressources/images/case-jaune.jpg"));
                         } else if (((BlocCouleur) g.getCases()[i][j].getContent()).getColor().equals(Color.BLUE)) {
-                            boutons[index].setIcon(new ImageIcon("images/case-bleu.jpg"));
+                            boutons[index].setIcon(new ImageIcon("ressources/images/case-bleu.jpg"));
                         } else if (((BlocCouleur) g.getCases()[i][j].getContent()).getColor().equals(Color.PINK)) {
-                            boutons[index].setIcon(new ImageIcon("images/case-violet.jpg"));
+                            boutons[index].setIcon(new ImageIcon("ressources/images/case-violet.jpg"));
                         }
                     } else if (g.getCases()[i][j].getContent() instanceof BlocObstacle) {
-                        boutons[index].setIcon(new ImageIcon("images/case-obstacle.jpg"));
+                        boutons[index].setIcon(new ImageIcon("ressources/images/case-obstacle.jpg"));
                     } else if (g.getCases()[i][j].getContent() instanceof BlocBombe) {
-                        boutons[index].setIcon(new ImageIcon("images/case-bombe.jpg"));
+                        boutons[index].setIcon(new ImageIcon("ressources/images/case-bombe.jpg"));
                     } else if (g.getCases()[i][j].getContent() == null) {
-                        boutons[index].setIcon(new ImageIcon("images/case-vide.jpg"));
+                        boutons[index].setIcon(new ImageIcon("ressources/images/case-vide.jpg"));
                     }
                     boutons[index].addActionListener(this);
                 }
@@ -215,7 +215,7 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
             this.validate();
         } else if (grille.isPerdu()) {
             this.setLayout(null);
-            Icon img = new ImageIcon("images/perte.png");
+            Icon img = new ImageIcon("ressources/images/perte.png");
             JLabel perte = new JLabel();
             perte.setIcon(img);
             perte.setBounds(200, -175, 1000, 1000);
