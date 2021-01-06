@@ -13,15 +13,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Partie extends vue.graphique.ImagePanel implements ActionListener {
-    Fenetre fenetre;
-    Grille grille;
-    JButton[] boutons;
-    JButton continuer, niveauSuivant, recommencer;
-    int index = 0;
-    GridBagLayout gl = new GridBagLayout();
-    Bonus[] bonus = new Bonus[5];
-    Bonus bonuSelected;
-    int niveau;
+    private Fenetre fenetre;
+    private Grille grille;
+    private JButton[] boutons;
+    private JButton continuer, niveauSuivant, recommencer;
+    private int index = 0;
+    private GridBagLayout gl = new GridBagLayout();
+    private Bonus[] bonus = new Bonus[5];
+    private Bonus bonuSelected;
+    private int niveau;
 
     public Partie(Fenetre f, Grille g, int n) {
         super(new ImageIcon("niveaux.jpg").getImage());
@@ -30,11 +30,11 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
         this.niveau = n;
         this.setLayout(gl);
         this.setVisible(true);
-        boutons = new JButton[g.getLongueur() + 1 * g.getLargeur() + 1];
+        boutons = new JButton[(g.getLongueur() + 1) * (g.getLargeur() + 1)];
         Afficher(g);
     }
 
-    class Bonus extends JButton {
+    private class Bonus extends JButton {
         modele.jeu.bonus.Bonus b;
 
         public Bonus(modele.jeu.bonus.Bonus bonus) {
@@ -43,7 +43,7 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
         }
     }
 
-    public void initBonus(GridBagConstraints n) {
+    private void initBonus(GridBagConstraints n) {
         n.gridx = 1;
         n.gridy = 9;
         for (int i = 0; i < Jeu.joueur.bonus.length; i++) {
@@ -58,7 +58,7 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
         }
     }
 
-    public void Afficher(Grille g) {
+    private void Afficher(Grille g) {
         GridBagConstraints niveau = new GridBagConstraints();
         niveau.fill = GridBagConstraints.HORIZONTAL;
         JButton score = new JButton("Tableau des scores");
@@ -121,26 +121,29 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Boolean BonusActivated = false;
         Object source = e.getSource();
         GridBagConstraints updateGrille = gl.getConstraints((Component) source);
         updateGrille.fill = GridBagConstraints.HORIZONTAL;
         this.removeAll();
-        if(bonuSelected != null) {
-            if(bonuSelected.b.getInit() == "fw") {
-                if(updateGrille.gridx < 7) {
-                    grille.actionBonus(bonuSelected.b.getInit(), 7, updateGrille.gridx);
+        if (bonuSelected != null) {
+            if (bonuSelected.b.getInit().equals("fw")) {
+                if (updateGrille.gridx <= 8 && bonuSelected.b.getNombreRestant() > 0) {
+                    grille.actionBonus(bonuSelected.b.getInit(), 8, updateGrille.gridx);
+                } else {
+                    JOptionPane.showMessageDialog(fenetre,
+                            "Désolé, vous avez utilisé tous les bonus de ce type bonus qui étaient à votre disposition.",
+                            "Aucun bonus de ce type disponible",
+                            JOptionPane.ERROR_MESSAGE);
                 }
-            }else {
-                if(updateGrille.gridy < 7 && updateGrille.gridx < 7) {
+            } else {
+                if (updateGrille.gridy <= 8 && updateGrille.gridx <= 8 && bonuSelected.b.getNombreRestant() > 0) {
                     grille.actionBonus(bonuSelected.b.getInit(), updateGrille.gridy, updateGrille.gridx);
+                } else {
+                    JOptionPane.showMessageDialog(fenetre,
+                            "Désolé, vous avez utilisé tous les bonus de ce type bonus qui étaient à votre disposition.",
+                            "Aucun bonus de ce type disponible",
+                            JOptionPane.ERROR_MESSAGE);
                 }
-            }
-            if(bonuSelected.b.getNombreRestant() == 0) {
-                JOptionPane.showMessageDialog(fenetre,
-                        "Désolé, vous avez utilisé tous les bonus de ce type bonus qui étaient à votre disposition.",
-                        "Aucun bonus de ce type disponible",
-                        JOptionPane.ERROR_MESSAGE);
             }
             bonuSelected = null;
         } else {
@@ -169,19 +172,19 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
             fenetre.cl.show(fenetre.general, "Partie");
             fenetre.validate();
         } else {
-            if(source == bonus[0]) {
+            if (source == bonus[0]) {
                 bonuSelected = bonus[0];
             }
-            if(source == bonus[1]) {
+            if (source == bonus[1]) {
                 bonuSelected = bonus[1];
             }
-            if(source == bonus[2]) {
+            if (source == bonus[2]) {
                 bonuSelected = bonus[2];
             }
-            if(source == bonus[3]) {
+            if (source == bonus[3]) {
                 bonuSelected = bonus[3];
             }
-            if(source == bonus[4]) {
+            if (source == bonus[4]) {
                 bonuSelected = bonus[4];
             }
         }

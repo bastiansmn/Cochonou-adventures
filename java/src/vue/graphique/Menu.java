@@ -10,13 +10,13 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class Menu extends vue.graphique.ImagePanel implements ActionListener {
-    Fenetre fenetre;
-    JLabel[] etiquettes = new JLabel[10];
-    JButton precedent, suivant, reglements;
-    ArrayList<JButton> boutons = new ArrayList<>();
-    Grille g = modele.jeu.Jeu.plateau.getNiveaux().get(Jeu.plateau.getIndexNiveauActuel()).getGrille();
-    JPanel partie = new vue.graphique.Partie(fenetre, g, Jeu.plateau.getIndexNiveauActuel());
-    int Niveau;
+    private Fenetre fenetre;
+    private JLabel[] etiquettes = new JLabel[10];
+    private JButton precedent, suivant, reglements;
+    private ArrayList<JButton> boutons = new ArrayList<>();
+    private Grille g = modele.jeu.Jeu.plateau.getNiveaux().get(Jeu.plateau.getIndexNiveauActuel()).getGrille();
+    private JPanel partie = new vue.graphique.Partie(fenetre, g, Jeu.plateau.getIndexNiveauActuel());
+    private int Niveau;
     boolean LastLevel = false;
 
     public Menu(Fenetre f, int niveauActuel, int niveauMax) {
@@ -28,7 +28,7 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
         this.setVisible(true);
     }
 
-    class Niveau extends JButton {
+    private class Niveau extends JButton {
         public int index = 0;
         int niveau;
 
@@ -49,7 +49,7 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
         }
     }
 
-    void creationBoutons(int niveauActuel, int niveauMax) {
+    private void creationBoutons(int niveauActuel, int niveauMax) {
         this.removeAll();
         int max = 10;
         if ((niveauActuel - niveauActuel % 10) != 0) {

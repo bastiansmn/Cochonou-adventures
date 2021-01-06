@@ -2,7 +2,6 @@ package vue.graphique;
 
 import java.awt.*;
 import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -11,7 +10,6 @@ public class Fenetre extends JFrame {
     CardLayout cl;
     JPanel general = new JPanel();
     JPanel menu = new Menu(this, Jeu.plateau.getIndexNiveauActuel(), Jeu.plateau.getNiveaux().size());
-    JDialog regles;
 
     Fenetre() {
         super();
