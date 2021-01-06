@@ -27,8 +27,8 @@ public class Jeu {
    }
 
    public void run() throws InvocationTargetException, InterruptedException {
-      if (new File("ser/jeu.ser").exists() && serialisation) {
-         try (FileInputStream fis = new FileInputStream("ser/jeu.ser");
+      if (new File("ressources/ser/jeu.ser").exists() && serialisation) {
+         try (FileInputStream fis = new FileInputStream("ressources/ser/jeu.ser");
               ObjectInputStream ois = new ObjectInputStream(fis)) {
             plateau = (Plateau) ois.readObject();
             joueur = (Joueur) ois.readObject();
@@ -65,9 +65,9 @@ public class Jeu {
 
    private void initPlateau() {
       try {
-         File[] list = new File("niveaux").listFiles();
+         File[] list = new File("ressources/niveaux").listFiles();
          for (int i = 0; i < Objects.requireNonNull(list).length; i++) {
-            plateau.ajouterNiveau(new Niveau(CSVImport.getCSV("niveaux/nv" + (i + 1) + ".csv", ";"), i == 0));
+            plateau.ajouterNiveau(new Niveau(CSVImport.getCSV("ressources/niveaux/nv" + (i + 1) + ".csv", ";"), i == 0));
          }
       } catch (CSVNotValidException error) {
          error.printStackTrace();

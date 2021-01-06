@@ -44,7 +44,7 @@ public class Grille implements Serializable {
             this.score += score;
             apresCoup(score != 0);
             if (Jeu.serialisation) {
-               try (FileOutputStream fos = new FileOutputStream("ser/jeu.ser");
+               try (FileOutputStream fos = new FileOutputStream("ressources/ser/jeu.ser");
                     ObjectOutputStream oos = new ObjectOutputStream(fos)) {
                   oos.writeObject(Jeu.plateau);
                   oos.writeObject(Jeu.joueur);
