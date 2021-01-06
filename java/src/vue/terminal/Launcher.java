@@ -265,7 +265,7 @@ public class Launcher {
                 - Utilisez vos bonus lorsque vous êtes coincé. 
                 
             Comment jouer :
-                - Cliquez ou entrez la position du bloc que vous souhaitez casser, ses blocs adjacents de même
+                - Entrez la position du bloc que vous souhaitez casser, ses blocs adjacents de même
             couleur seront détruits aussi.
                 - Chaque animal est représenté par une lettre différente :
                    * Chat : c

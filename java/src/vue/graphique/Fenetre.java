@@ -16,7 +16,7 @@ public class Fenetre extends JFrame {
         this.cl = new CardLayout();
         this.setTitle("COCHONOU-ADVENTURES");
         this.setSize(1000, 835);
-        this.setIconImage((new ImageIcon("cochonou.png")).getImage());
+        this.setIconImage((new ImageIcon("images/cochonou.png")).getImage());
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.general.setLayout(cl);

@@ -20,7 +20,7 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
     boolean LastLevel = false;
 
     public Menu(Fenetre f, int niveauActuel, int niveauMax) {
-        super(new ImageIcon("fond.jpg").getImage());
+        super(new ImageIcon("images/fond.jpg").getImage());
         this.fenetre = f;
         this.Niveau = niveauActuel;
         this.setLayout(null);
@@ -78,7 +78,7 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
             boutons.get(i).setBorderPainted(false);
             this.add(boutons.get(i), "i");
             if(LastLevel != true && !Jeu.plateau.getNiveaux().get(i+1).canPlay()) {
-                Icon remember = new ImageIcon("joueur.png");
+                Icon remember = new ImageIcon("images/joueur.png");
                 JLabel joueur = new JLabel();
                 joueur.setIcon(remember);
                 joueur.setOpaque(false);
