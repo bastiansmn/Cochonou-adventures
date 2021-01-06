@@ -13,7 +13,7 @@ public class Fenetre extends JFrame {
     JPanel menu = new Menu(this, Jeu.plateau.getIndexNiveauActuel(), Jeu.plateau.getNiveaux().size());
     JDialog regles;
 
-    public Fenetre() {
+    Fenetre() {
         super();
         this.cl = new CardLayout();
         this.setTitle("COCHONOU-ADVENTURES");

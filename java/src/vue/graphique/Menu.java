@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class Menu extends vue.graphique.ImagePanel implements ActionListener {
     Fenetre fenetre;
-    JLabel[] etiquettes;
+    JLabel[] etiquettes = new JLabel[10];
     JButton precedent, suivant, reglements;
     ArrayList<JButton> boutons = new ArrayList<>();
     Grille g = modele.jeu.Jeu.plateau.getNiveaux().get(Jeu.plateau.getIndexNiveauActuel()).getGrille();
@@ -60,7 +60,7 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
             precedent.addActionListener(this);
             this.add(precedent);
         }
-        else if ((niveauActuel - niveauActuel % 10) + 10 < niveauMax) {
+        if ((niveauActuel - niveauActuel % 10) + 10 < niveauMax) {
             suivant = new JButton("Suivant");
             suivant.setBounds(875, 750, 100, 40);
             suivant.setBackground(new Color(0, 0, 0));
@@ -100,11 +100,11 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
         fenetre.general.add(partie, "Partie");
 
         if (source == precedent) {
-            JPanel menuBis = new Menu(fenetre, Niveau = Niveau - 10, 100);
+            JPanel menuBis = new Menu(fenetre, Niveau = Niveau - 10, Jeu.plateau.getNiveaux().size());
             fenetre.general.add(menuBis, "MenuBis");
             fenetre.cl.show(fenetre.general, "MenuBis");
         } else if (source == suivant) {
-            JPanel menuBis = new Menu(fenetre, Niveau = Niveau + 10, 100);
+            JPanel menuBis = new Menu(fenetre, Niveau = Niveau + 10, Jeu.plateau.getNiveaux().size());
             fenetre.general.add(menuBis, "MenuBis");
             fenetre.cl.show(fenetre.general, "MenuBis");
         } else if (source == reglements) {

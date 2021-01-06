@@ -7,7 +7,7 @@ class ImagePanel extends JPanel {
 
     private Image image;
 
-    public ImagePanel(Image img){
+    ImagePanel(Image img){
         this.image = img;
     }
 
