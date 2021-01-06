@@ -1,7 +1,6 @@
 package vue.graphique;
 
 import modele.jeu.Jeu;
-import modele.jeu.Niveau;
 import modele.jeu.animaux.*;
 import modele.jeu.grille.blocs.BlocBombe;
 import modele.jeu.grille.blocs.BlocCouleur;
@@ -17,16 +16,18 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
     Fenetre fenetre;
     Grille grille;
     JButton[] boutons;
-    JButton continuer, recommencer;
+    JButton continuer, niveauSuivant, recommencer;
     int index = 0;
     GridBagLayout gl = new GridBagLayout();
     Bonus[] bonus = new Bonus[5];
     Bonus bonuSelected;
+    int niveau;
 
-    public Partie(Fenetre f, Grille g) {
+    public Partie(Fenetre f, Grille g, int n) {
         super(new ImageIcon("niveaux.jpg").getImage());
         this.fenetre = f;
         this.grille = g;
+        this.niveau = n;
         this.setLayout(gl);
         this.setVisible(true);
         boutons = new JButton[g.getLongueur() + 1 * g.getLargeur() + 1];
@@ -34,33 +35,42 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
     }
 
     class Bonus extends JButton {
-        String init;
+        modele.jeu.bonus.Bonus b;
 
-        public Bonus(String init) {
-            this.init = init;
-            this.setIcon(new ImageIcon("case-" + init + ".png"));
+        public Bonus(modele.jeu.bonus.Bonus bonus) {
+            this.setIcon(new ImageIcon("case-" + bonus.getInit() + ".png"));
+            this.b = bonus;
         }
     }
 
     public void initBonus(GridBagConstraints n) {
         n.gridx = 1;
-        n.gridy = 8;
+        n.gridy = 9;
         for (int i = 0; i < Jeu.joueur.bonus.length; i++) {
-            bonus[i] = new Bonus(Jeu.joueur.bonus[i].getInit());
+            bonus[i] = new Bonus(Jeu.joueur.bonus[i]);
             this.add(bonus[i], n);
             n.gridx++;
             bonus[i].setOpaque(false);
             bonus[i].setContentAreaFilled(false);
             bonus[i].setBorderPainted(false);
+            bonus[i].setToolTipText("Bonus restants : " + bonus[i].b.getNombreRestant());
             bonus[i].addActionListener(this);
         }
     }
 
     public void Afficher(Grille g) {
-        JLabel score = new JLabel("Score : " + g.getScore());
-        this.add(score);
         GridBagConstraints niveau = new GridBagConstraints();
         niveau.fill = GridBagConstraints.HORIZONTAL;
+        JButton score = new JButton("Tableau des scores");
+        score.setToolTipText("<html>Score : " + g.getScore() + "<br/>" +
+                "Animaux sauvés : " + g.getAnimauxSauvee() + "/" + g.getAnimauxRestants() + "<br/>" +
+                "Coups restants : " + g.getNombreLimiteDeCoup() + " ".repeat(Math.abs(Integer.toString(g.getNombreLimiteDeCoup()).length() - 2)) + " <br/>" +
+                "Vie restante : " + Jeu.joueur.getVie() + "</html>");
+        niveau.gridx = 8;
+        niveau.gridy = 0;
+        this.add(score, niveau);
+        score.setForeground(new Color(0, 0, 0));
+        score.setBackground(new Color(243, 202, 32));
         initBonus(niveau);
         for (int i = g.getLongueur() - 7; i < g.getLongueur(); i++) {
             for (int j = 0; j < 7; j++) {
@@ -117,14 +127,20 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
         updateGrille.fill = GridBagConstraints.HORIZONTAL;
         this.removeAll();
         if(bonuSelected != null) {
-            if(bonuSelected.init == "fw") {
+            if(bonuSelected.b.getInit() == "fw") {
                 if(updateGrille.gridx < 7) {
-                    grille.actionBonus(bonuSelected.init, 7, updateGrille.gridx);
+                    grille.actionBonus(bonuSelected.b.getInit(), 7, updateGrille.gridx);
                 }
             }else {
                 if(updateGrille.gridy < 7 && updateGrille.gridx < 7) {
-                    grille.actionBonus(bonuSelected.init, updateGrille.gridy, updateGrille.gridx);
+                    grille.actionBonus(bonuSelected.b.getInit(), updateGrille.gridy, updateGrille.gridx);
                 }
+            }
+            if(bonuSelected.b.getNombreRestant() == 0) {
+                JOptionPane.showMessageDialog(fenetre,
+                        "Désolé, vous avez utilisé tous les bonus de ce type bonus qui étaient à votre disposition.",
+                        "Aucun bonus de ce type disponible",
+                        JOptionPane.ERROR_MESSAGE);
             }
             bonuSelected = null;
         } else {
@@ -133,14 +149,22 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
         if (source == continuer) {
             fenetre.remove(fenetre.menu);
             fenetre.menu = new Menu(fenetre, Jeu.plateau.getIndexNiveauActuel(), Jeu.plateau.getNiveaux().size());
+            fenetre.general.add(fenetre.menu, "Menu");
             fenetre.cl.show(fenetre.general, "Menu");
-            this.validate();
-            this.repaint();
-        } else if (source == recommencer) {
+            fenetre.validate();
+        } else if (source == niveauSuivant) {
             this.removeAll();
             fenetre.remove(this);
             Grille g = Jeu.plateau.getNiveaux().get(Jeu.plateau.getIndexNiveauActuel()).getGrille();
-            JPanel partie = new vue.graphique.Partie(fenetre, g);
+            JPanel partie = new vue.graphique.Partie(fenetre, g, Jeu.plateau.getIndexNiveauActuel());
+            fenetre.general.add(partie, "Partie");
+            fenetre.cl.show(fenetre.general, "Partie");
+            fenetre.validate();
+        } else if (source == recommencer) {
+            this.removeAll();
+            fenetre.remove(this);
+            Grille g = Jeu.plateau.getNiveaux().get(niveau).getGrille();
+            JPanel partie = new vue.graphique.Partie(fenetre, g, niveau);
             fenetre.general.add(partie, "Partie");
             fenetre.cl.show(fenetre.general, "Partie");
             fenetre.validate();
@@ -171,19 +195,19 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
             updateGrille.gridx = 10;
             updateGrille.gridy = 50;
             continuer = new JButton("Menu principal");
-            continuer.setBounds(300, 500, 100, 40);
+            continuer.setBounds(300, 500, 150, 40);
             continuer.setBackground(new Color(0, 0, 0));
             continuer.setForeground(new Color(255, 255, 255));
             continuer.addActionListener(this);
             this.add(continuer, updateGrille);
             updateGrille.gridx = 30;
             updateGrille.gridy = 300;
-            recommencer = new JButton("Niveau suivant");
-            recommencer.setBounds(550, 500, 150, 40);
-            recommencer.setBackground(new Color(0, 0, 0));
-            recommencer.setForeground(new Color(255, 255, 255));
-            recommencer.addActionListener(this);
-            this.add(recommencer, updateGrille);
+            niveauSuivant = new JButton("Niveau suivant");
+            niveauSuivant.setBounds(550, 500, 125, 40);
+            niveauSuivant.setBackground(new Color(0, 0, 0));
+            niveauSuivant.setForeground(new Color(255, 255, 255));
+            niveauSuivant.addActionListener(this);
+            this.add(niveauSuivant, updateGrille);
             this.repaint();
             this.validate();
         } else if (grille.isPerdu()) {
@@ -196,7 +220,7 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
             updateGrille.gridx = 10;
             updateGrille.gridy = 50;
             continuer = new JButton("Menu principal");
-            continuer.setBounds(300, 500, 100, 40);
+            continuer.setBounds(300, 500, 150, 40);
             continuer.setBackground(new Color(0, 0, 0));
             continuer.setForeground(new Color(255, 255, 255));
             continuer.addActionListener(this);
@@ -204,7 +228,7 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
             updateGrille.gridx = 30;
             updateGrille.gridy = 300;
             recommencer = new JButton("Recommencer");
-            recommencer.setBounds(550, 500, 150, 40);
+            recommencer.setBounds(550, 500, 125, 40);
             recommencer.setBackground(new Color(0, 0, 0));
             recommencer.setForeground(new Color(255, 255, 255));
             recommencer.addActionListener(this);

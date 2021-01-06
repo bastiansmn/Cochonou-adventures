@@ -1,7 +1,6 @@
 package vue.graphique;
 
 import modele.jeu.Jeu;
-import modele.jeu.Niveau;
 import modele.jeu.grille.Grille;
 
 import javax.swing.*;
@@ -15,9 +14,10 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
     JLabel[] etiquettes;
     JButton precedent, suivant, reglements;
     ArrayList<JButton> boutons = new ArrayList<>();
-    Grille g = modele.jeu.Jeu.plateau.getNiveaux().get(0).getGrille();
-    JPanel partie = new vue.graphique.Partie(fenetre, g);
+    Grille g = modele.jeu.Jeu.plateau.getNiveaux().get(Jeu.plateau.getIndexNiveauActuel()).getGrille();
+    JPanel partie = new vue.graphique.Partie(fenetre, g, Jeu.plateau.getIndexNiveauActuel());
     int Niveau;
+    boolean LastLevel = false;
 
     public Menu(Fenetre f, int niveauActuel, int niveauMax) {
         super(new ImageIcon("fond.jpg").getImage());
@@ -36,10 +36,8 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
             niveau = i + 1;
             etiquettes[index] = new JLabel("  NIVEAU " + niveau);
             if(Jeu.plateau.getNiveaux().get(i).canPlay()) {
-                    this.setToolTipText("Score : " + Jeu.plateau.getNiveaux().get(i).getGrille().getScore());
                 etiquettes[index].setForeground(new Color(0, 0, 0));
                 this.setBackground(new Color(243, 202, 32));
-                System.out.println(Jeu.plateau.getNiveaux().get(0).getGrille().isGagne());
             } else {
                 etiquettes[index].setForeground(new Color(243, 202, 32));
                 this.setBackground(new Color(0, 0, 0));
@@ -79,6 +77,15 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
             boutons.get(i).addActionListener(this);
             boutons.get(i).setBorderPainted(false);
             this.add(boutons.get(i), "i");
+            if(LastLevel != true && !Jeu.plateau.getNiveaux().get(i+1).canPlay()) {
+                Icon remember = new ImageIcon("joueur.png");
+                JLabel joueur = new JLabel();
+                joueur.setIcon(remember);
+                joueur.setOpaque(false);
+                joueur.setBounds(coords[i][0]-75,coords[i][1]-75,200,200);
+                this.add(joueur);
+                LastLevel = true;
+            }
         }
         reglements = new JButton("Règles du jeu");
         reglements.setBounds(825, 20, 120, 40);
@@ -102,7 +109,7 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
             fenetre.cl.show(fenetre.general, "MenuBis");
         } else if (source == reglements) {
             JOptionPane.showMessageDialog(fenetre,
-                    "<html>But du jeu : </br>" +
+                    "<html>But du jeu : <br/>" +
                     "    - Dans chaque niveau, sauvez tous les animaux.<br/>" +
                     "    - Cassez les blocs pour les faire descendre jusqu'en bas.<br/>" +
                     "    - Utilisez vos bonus lorsque vous êtes coincés.<br/>" +
@@ -116,7 +123,7 @@ public class Menu extends vue.graphique.ImagePanel implements ActionListener {
             if(Jeu.plateau.getNiveaux().get(Integer.parseInt(((JButton)e.getSource()).getText())).canPlay()) {
                 Niveau = (Niveau - Niveau % 10) + boutons.indexOf(source);
                 fenetre.remove(partie);
-                partie = new vue.graphique.Partie(fenetre, modele.jeu.Jeu.plateau.getNiveaux().get(Niveau).getGrille());
+                partie = new vue.graphique.Partie(fenetre, modele.jeu.Jeu.plateau.getNiveaux().get(Niveau).getGrille(), Niveau);
                 fenetre.general.add(partie, "Partie");
                 fenetre.cl.show(fenetre.general, "Partie");
                 fenetre.validate();

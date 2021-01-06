@@ -233,7 +233,7 @@ public class Launcher {
             ============================
                        
                 Votre score : %d
-                Votre nombre de vie : %d
+                Votre nombre de vies : %d
                        
             %n""", Jeu.joueur.getScore(), Jeu.joueur.getVie());
    }
@@ -260,9 +260,9 @@ public class Launcher {
       clear();
       System.out.println("""
             But du jeu :
-                - Dans chaques niveau, sauvez tous les animaux.
+                - Dans chaque niveau, sauvez tous les animaux.
                 - Cassez les blocs pour les faire descendre jusqu'en bas.
-                - Utilisez vos bonus lorsque vous êtes coincés. 
+                - Utilisez vos bonus lorsque vous êtes coincé. 
                 
             Comment jouer :
                 - Cliquez ou entrez la position du bloc que vous souhaitez casser, ses blocs adjacents de même
