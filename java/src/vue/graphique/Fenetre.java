@@ -2,7 +2,6 @@ package vue.graphique;
 
 import java.awt.*;
 import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -11,14 +10,13 @@ public class Fenetre extends JFrame {
     CardLayout cl;
     JPanel general = new JPanel();
     JPanel menu = new Menu(this, Jeu.plateau.getIndexNiveauActuel(), Jeu.plateau.getNiveaux().size());
-    JDialog regles;
 
     Fenetre() {
         super();
         this.cl = new CardLayout();
         this.setTitle("COCHONOU-ADVENTURES");
         this.setSize(1000, 835);
-        this.setIconImage((new ImageIcon("cochonou.png")).getImage());
+        this.setIconImage((new ImageIcon("images/cochonou.png")).getImage());
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.general.setLayout(cl);

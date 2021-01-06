@@ -13,37 +13,37 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Partie extends vue.graphique.ImagePanel implements ActionListener {
-    Fenetre fenetre;
-    Grille grille;
-    JButton[] boutons;
-    JButton continuer, niveauSuivant, recommencer;
-    int index = 0;
-    GridBagLayout gl = new GridBagLayout();
-    Bonus[] bonus = new Bonus[5];
-    Bonus bonuSelected;
-    int niveau;
+    private Fenetre fenetre;
+    private Grille grille;
+    private JButton[] boutons;
+    private JButton continuer, niveauSuivant, recommencer;
+    private int index = 0;
+    private GridBagLayout gl = new GridBagLayout();
+    private Bonus[] bonus = new Bonus[5];
+    private Bonus bonuSelected;
+    private int niveau;
 
     public Partie(Fenetre f, Grille g, int n) {
-        super(new ImageIcon("niveaux.jpg").getImage());
+        super(new ImageIcon("images/niveaux.jpg").getImage());
         this.fenetre = f;
         this.grille = g;
         this.niveau = n;
         this.setLayout(gl);
         this.setVisible(true);
-        boutons = new JButton[g.getLongueur() + 1 * g.getLargeur() + 1];
+        boutons = new JButton[(g.getLongueur() + 1) * (g.getLargeur() + 1)];
         Afficher(g);
     }
 
-    class Bonus extends JButton {
+    private class Bonus extends JButton {
         modele.jeu.bonus.Bonus b;
 
         public Bonus(modele.jeu.bonus.Bonus bonus) {
-            this.setIcon(new ImageIcon("case-" + bonus.getInit() + ".png"));
+            this.setIcon(new ImageIcon("images/case-" + bonus.getInit() + ".png"));
             this.b = bonus;
         }
     }
 
-    public void initBonus(GridBagConstraints n) {
+    private void initBonus(GridBagConstraints n) {
         n.gridx = 1;
         n.gridy = 9;
         for (int i = 0; i < Jeu.joueur.bonus.length; i++) {
@@ -58,7 +58,7 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
         }
     }
 
-    public void Afficher(Grille g) {
+    private void Afficher(Grille g) {
         GridBagConstraints niveau = new GridBagConstraints();
         niveau.fill = GridBagConstraints.HORIZONTAL;
         JButton score = new JButton("Tableau des scores");
@@ -84,34 +84,34 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
                     this.add(boutons[index], niveau);
                     if (g.getCases()[i][j].getContent() instanceof Animal) {
                         if (g.getCases()[i][j].getContent() instanceof Chat) {
-                            boutons[index].setIcon(new ImageIcon("case-chat.jpg"));
+                            boutons[index].setIcon(new ImageIcon("images/case-chat.jpg"));
                         } else if (g.getCases()[i][j].getContent() instanceof Chien) {
-                            boutons[index].setIcon(new ImageIcon("case-chien.jpg"));
+                            boutons[index].setIcon(new ImageIcon("images/case-chien.jpg"));
                         } else if (g.getCases()[i][j].getContent() instanceof Cochon) {
-                            boutons[index].setIcon(new ImageIcon("case-cochon.jpg"));
+                            boutons[index].setIcon(new ImageIcon("images/case-cochon.jpg"));
                         } else if (g.getCases()[i][j].getContent() instanceof Panda) {
-                            boutons[index].setIcon(new ImageIcon("case-panda.jpg"));
+                            boutons[index].setIcon(new ImageIcon("images/case-panda.jpg"));
                         } else if (g.getCases()[i][j].getContent() instanceof Oiseau) {
-                            boutons[index].setIcon(new ImageIcon("case-oiseau.jpg"));
+                            boutons[index].setIcon(new ImageIcon("images/case-oiseau.jpg"));
                         }
                     } else if (g.getCases()[i][j].getContent() instanceof BlocCouleur) {
                         if (((BlocCouleur) g.getCases()[i][j].getContent()).getColor().equals(Color.GREEN)) {
-                            boutons[index].setIcon(new ImageIcon("case-verte.jpg"));
+                            boutons[index].setIcon(new ImageIcon("images/case-verte.jpg"));
                         } else if (((BlocCouleur) g.getCases()[i][j].getContent()).getColor().equals(Color.RED)) {
-                            boutons[index].setIcon(new ImageIcon("case-rouge.jpg"));
+                            boutons[index].setIcon(new ImageIcon("images/case-rouge.jpg"));
                         } else if (((BlocCouleur) g.getCases()[i][j].getContent()).getColor().equals(Color.YELLOW)) {
-                            boutons[index].setIcon(new ImageIcon("case-jaune.jpg"));
+                            boutons[index].setIcon(new ImageIcon("images/case-jaune.jpg"));
                         } else if (((BlocCouleur) g.getCases()[i][j].getContent()).getColor().equals(Color.BLUE)) {
-                            boutons[index].setIcon(new ImageIcon("case-bleu.jpg"));
+                            boutons[index].setIcon(new ImageIcon("images/case-bleu.jpg"));
                         } else if (((BlocCouleur) g.getCases()[i][j].getContent()).getColor().equals(Color.PINK)) {
-                            boutons[index].setIcon(new ImageIcon("case-violet.jpg"));
+                            boutons[index].setIcon(new ImageIcon("images/case-violet.jpg"));
                         }
                     } else if (g.getCases()[i][j].getContent() instanceof BlocObstacle) {
-                        boutons[index].setIcon(new ImageIcon("case-obstacle.jpg"));
+                        boutons[index].setIcon(new ImageIcon("images/case-obstacle.jpg"));
                     } else if (g.getCases()[i][j].getContent() instanceof BlocBombe) {
-                        boutons[index].setIcon(new ImageIcon("case-bombe.jpg"));
+                        boutons[index].setIcon(new ImageIcon("images/case-bombe.jpg"));
                     } else if (g.getCases()[i][j].getContent() == null) {
-                        boutons[index].setIcon(new ImageIcon("case-vide.jpg"));
+                        boutons[index].setIcon(new ImageIcon("images/case-vide.jpg"));
                     }
                     boutons[index].addActionListener(this);
                 }
@@ -121,26 +121,29 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Boolean BonusActivated = false;
         Object source = e.getSource();
         GridBagConstraints updateGrille = gl.getConstraints((Component) source);
         updateGrille.fill = GridBagConstraints.HORIZONTAL;
         this.removeAll();
-        if(bonuSelected != null) {
-            if(bonuSelected.b.getInit() == "fw") {
-                if(updateGrille.gridx < 7) {
-                    grille.actionBonus(bonuSelected.b.getInit(), 7, updateGrille.gridx);
+        if (bonuSelected != null) {
+            if (bonuSelected.b.getInit().equals("fw")) {
+                if (updateGrille.gridx <= 8 && bonuSelected.b.getNombreRestant() > 0) {
+                    grille.actionBonus(bonuSelected.b.getInit(), 8, updateGrille.gridx);
+                } else {
+                    JOptionPane.showMessageDialog(fenetre,
+                            "Désolé, vous avez utilisé tous les bonus de ce type bonus qui étaient à votre disposition.",
+                            "Aucun bonus de ce type disponible",
+                            JOptionPane.ERROR_MESSAGE);
                 }
-            }else {
-                if(updateGrille.gridy < 7 && updateGrille.gridx < 7) {
+            } else {
+                if (updateGrille.gridy <= 8 && updateGrille.gridx <= 8 && bonuSelected.b.getNombreRestant() > 0) {
                     grille.actionBonus(bonuSelected.b.getInit(), updateGrille.gridy, updateGrille.gridx);
+                } else {
+                    JOptionPane.showMessageDialog(fenetre,
+                            "Désolé, vous avez utilisé tous les bonus de ce type bonus qui étaient à votre disposition.",
+                            "Aucun bonus de ce type disponible",
+                            JOptionPane.ERROR_MESSAGE);
                 }
-            }
-            if(bonuSelected.b.getNombreRestant() == 0) {
-                JOptionPane.showMessageDialog(fenetre,
-                        "Désolé, vous avez utilisé tous les bonus de ce type bonus qui étaient à votre disposition.",
-                        "Aucun bonus de ce type disponible",
-                        JOptionPane.ERROR_MESSAGE);
             }
             bonuSelected = null;
         } else {
@@ -169,25 +172,25 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
             fenetre.cl.show(fenetre.general, "Partie");
             fenetre.validate();
         } else {
-            if(source == bonus[0]) {
+            if (source == bonus[0]) {
                 bonuSelected = bonus[0];
             }
-            if(source == bonus[1]) {
+            if (source == bonus[1]) {
                 bonuSelected = bonus[1];
             }
-            if(source == bonus[2]) {
+            if (source == bonus[2]) {
                 bonuSelected = bonus[2];
             }
-            if(source == bonus[3]) {
+            if (source == bonus[3]) {
                 bonuSelected = bonus[3];
             }
-            if(source == bonus[4]) {
+            if (source == bonus[4]) {
                 bonuSelected = bonus[4];
             }
         }
         if (grille.isGagne()) {
             this.setLayout(null);
-            Icon img = new ImageIcon("gagne.png");
+            Icon img = new ImageIcon("images/gagne.png");
             JLabel victoire = new JLabel();
             victoire.setIcon(img);
             victoire.setBounds(200, -175, 1000, 1000);
@@ -212,7 +215,7 @@ public class Partie extends vue.graphique.ImagePanel implements ActionListener {
             this.validate();
         } else if (grille.isPerdu()) {
             this.setLayout(null);
-            Icon img = new ImageIcon("perte.png");
+            Icon img = new ImageIcon("images/perte.png");
             JLabel perte = new JLabel();
             perte.setIcon(img);
             perte.setBounds(200, -175, 1000, 1000);
