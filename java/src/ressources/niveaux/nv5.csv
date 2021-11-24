@@ -1,0 +1,10 @@
+6;;;;;;
+bleu;bleu;vert;vert;vert;rouge;rouge
+bleu;bleu;rose;rose;rose;rouge;rouge
+null;chien;null;null;null;chat;null
+bleu;bleu;vert;vert;vert;rouge;rouge
+vert;vert;obstacle;bleu;obstacle;jaune;jaune
+vert;vert;obstacle;bleu;obstacle;jaune;jaune
+bleu;rouge;rouge;vert;bleu;bleu;vert
+bleu;rouge;rouge;vert;bleu;bleu;vert
+bleu;rouge;rouge;vert;bleu;bleu;vert

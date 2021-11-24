@@ -49,22 +49,22 @@ public class CSVImport extends CSVObject {
       for (int i = 1; i < temp.length; i++) {
          for (int j = 0; j < temp[i].length; j++) {
             switch (this.get(i, j)) {
-               case "null" -> this.cases[i-1][j] = null;
-               case "" -> this.cases[i-1][j] = new Case(null);
-               case "oiseau" -> this.cases[i-1][j] = new Case(new Oiseau(""));
-               case "chat" -> this.cases[i-1][j] = new Case(new Chat(""));
-               case "chien" -> this.cases[i-1][j] = new Case(new Chien(""));
-               case "cochon" -> this.cases[i-1][j] = new Case(new Cochon(""));
-               case "panda" -> this.cases[i-1][j] = new Case(new Panda(""));
-               case "bombe" -> this.cases[i-1][j] = new Case(new BlocBombe());
-               case "obstacle" -> this.cases[i-1][j] = new Case(new BlocObstacle());
-               case "vert" -> this.cases[i-1][j] = new Case(new BlocCouleur(Color.GREEN));
-               case "bleu" -> this.cases[i-1][j] = new Case(new BlocCouleur(Color.BLUE));
-               case "rouge" -> this.cases[i-1][j] = new Case(new BlocCouleur(Color.RED));
-               case "jaune" -> this.cases[i-1][j] = new Case(new BlocCouleur(Color.YELLOW));
-               case "rose" -> this.cases[i-1][j] = new Case(new BlocCouleur(Color.PINK));
+               case "null": this.cases[i-1][j] = null; break;
+               case "": this.cases[i-1][j] = new Case(null); break;
+               case "oiseau":  this.cases[i-1][j] = new Case(new Oiseau("")); break;
+               case "chat":  this.cases[i-1][j] = new Case(new Chat("")); break;
+               case "chien":  this.cases[i-1][j] = new Case(new Chien("")); break;
+               case "cochon":  this.cases[i-1][j] = new Case(new Cochon("")); break;
+               case "panda":  this.cases[i-1][j] = new Case(new Panda("")); break;
+               case "bombe":  this.cases[i-1][j] = new Case(new BlocBombe()); break;
+               case "obstacle":  this.cases[i-1][j] = new Case(new BlocObstacle()); break;
+               case "vert":  this.cases[i-1][j] = new Case(new BlocCouleur(Color.GREEN)); break;
+               case "bleu":  this.cases[i-1][j] = new Case(new BlocCouleur(Color.BLUE)); break;
+               case "rouge":  this.cases[i-1][j] = new Case(new BlocCouleur(Color.RED)); break;
+               case "jaune":  this.cases[i-1][j] = new Case(new BlocCouleur(Color.YELLOW)); break;
+               case "rose":  this.cases[i-1][j] = new Case(new BlocCouleur(Color.PINK)); break;
 
-               default -> throw new CSVNotValidException(this.get(i, j) + " n'est pas un nom valide. \nVeuillez revoir le fichier CSV (" + this.getFile() + ")");
+               default:  throw new CSVNotValidException(this.get(i, j) + " n'est pas un nom valide. \nVeuillez revoir le fichier CSV (" + this.getFile() + ")");
             }
          }
       }
