@@ -28,7 +28,13 @@ Vous pouvez jouer et sauvez les animaux en cassant les blocs ou en utilisant vos
 
 ### Comment jouer ?
 
-Pour jouer il vous suffit de lancer une des commandes suivantes :
+Si vous souhaitez jouer sans télécharger le projet vous pouvez suivre ce lien :
+https://replit.com/join/klpkorkyed-bastiansomon
+Ou celui-ci :
+https://replit.com/@bastiansomon/Cochonou-adventures#.replit
+Remarque : Le site n'est pas fait pour la performance, mais juste pour éviter de faire télécharger des .jar. Le jeu est donc assez lent. Il est préférable de jouer sur sa machine pour une meilleure expérience.
+
+Sinon, pour jouer sur votre machine il vous suffit de lancer une des commandes suivantes :
 
 - Si vous lancez le jeu depuis un IDE (on ne vous conseil pas cette version pour profiter un maximum de la version terminale) :
  Lancez la classe Jouer.java avec les arguments suivants :
